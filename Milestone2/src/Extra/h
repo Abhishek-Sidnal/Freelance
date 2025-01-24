@@ -1,0 +1,28 @@
+Sure, let's walk through the selection process step by step based on the structure we've discussed.
+
+1. **Regions Selection:**
+   - Initially, none of the regions are selected.
+   - When you select regions like "AMR" and "EMEA", these regions will be highlighted in the selection.
+
+2. **Countries Selection:**
+   - After selecting regions, you can then choose countries within those selected regions.
+   - For example, if you select "AMR", you can further select countries like "USA", "Canada", or "Mexico".
+   - Only countries within the selected regions will be available for selection.
+
+3. **Market Teams Selection:**
+   - Once you select a country, such as "USA", the market teams associated with that country become selectable.
+   - For "USA", market teams like "USA_TeamA" and "USA_TeamB" can be chosen.
+
+4. **Markets Selection:**
+   - After selecting a market team, such as "USA_TeamA", the markets under that team are displayed.
+   - You can select specific markets like "USA_TA_MarketA", "USA_TA_MarketB", etc., under "USA_TeamA".
+
+5. **Stores Selection:**
+   - Finally, after selecting a market like "USA_TA_MarketA", the stores associated with that market will appear.
+   - You can select individual stores like "USA_TA_M_A_StoreA", "USA_TA_M_A_StoreB", and so on.
+
+6. **Selected Column:**
+   - The "Selected" column displays the currently chosen items from the deepest level of selection.
+   - For instance, if you select stores under "USA_TA_MarketA", such as "USA_TA_M_A_StoreA" and "USA_TA_M_A_StoreB", these store names will appear in the "Selected" column.
+
+Each level of selection depends on the previous selections made. If you deselect any higher-level item (e.g., region, country), it will reset the selections at lower levels (e.g., market teams, markets, stores). This structure ensures that selections are hierarchical and logically dependent on each other.
