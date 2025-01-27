@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { regions } from "../constant/Data2";
+import { regions } from "../constant/Data";
 
 export const GeoContext = createContext();
 

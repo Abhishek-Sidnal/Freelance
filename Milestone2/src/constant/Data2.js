@@ -280,21 +280,4 @@ export const regions = [
     }
 ];
 
-export const tHeader = [
-    "Action",
-    "Metric ID",
-    "Metric Name",
-    "Geo",
-    "LOB",
-    "RTM",
-    "Same Day Domestic",
-    "Metric Type",
-    "Metric Floor",
-    "Metric Ceiling",
-    "Metric Weightage",
-    "Benchmark Value",
-    "Benchmark Ceiling",
-    "Benchmark Logic Type",
-    "Metric Sign",
-    "Ranking Metric"
-]
+

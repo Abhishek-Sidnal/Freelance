@@ -10,16 +10,17 @@ const MetricRow = memo(({ metric, isExpanded, onToggleExpand, onOpenModal }) => 
         </td>
         <td>
             <div className="expand-column">
-                <button onClick={() => onToggleExpand(metric.metricID)}>
+                <button className="modal-button" onClick={() => onToggleExpand(metric.metricID)}>
                     {isExpanded ? <FaChevronDown /> : <FaChevronRight />}
                 </button>{" "}
                 {metric.metricID}
             </div>
         </td>
-        <td>{metric.metricName}</td>
-        {Array(13).fill("").map((_, i) => (
+        <td>{metric.metricName} </td>
+        <td colSpan="16"></td>
+        {/* {Array(13).fill("").map((_, i) => (
             <td key={i}></td>
-        ))}
+        ))} */}
     </tr>
 ));
 

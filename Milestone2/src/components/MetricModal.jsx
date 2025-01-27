@@ -2,7 +2,9 @@ import React, { useContext, useState } from "react";
 import { GeoContext } from "../context/GeoContext";
 import GeoSelector from "./GeoSelector";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-
+import { tHeader } from "../constant/Data";
+import ExpandedRow from "./ExpandedRow"
+import THead from "./THead";
 const MetricModal = ({ open, onClose, metric, onAddRows }) => {
     const { selectedColumns, resetAll } = useContext(GeoContext);
     const [activeStep, setActiveStep] = useState(0);
@@ -21,6 +23,7 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
     const [rankingMetric, setRankingMetric] = useState("yes");
     const [previewRows, setPreviewRows] = useState([]);
     const [alreadyExist, setAlreadyExist] = useState([]); // Existing rows
+
 
 
     // Toggle LOB dropdown
@@ -78,8 +81,6 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
 
         setPreviewRows(newRows);
         setAlreadyExist(existingRows);
-        resetAll();
-
     };
 
     const handleCreateRows = () => {
@@ -116,41 +117,30 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
                                 <div className="field" >
                                     <label>LOB:</label>
                                     <div className="multi-select-dropdown">
-                                        <div
-                                            className="dropdown-header"
-                                            onClick={toggleLobDropdown}
-                                        >
-                                            {selectedLob.length > 0
-                                                ? selectedLob.join(", ")
-                                                : "Select LOB"}
-                                            <span
-                                                className={`dropdown-arrow ${isLobDropdownOpen ? "open" : ""
-                                                    }`}
-                                            >
-                                                {isLobDropdownOpen ? <FaAngleUp />
-                                                    : <FaAngleDown />}
+                                        <div className="dropdown-header">
+                                            {selectedLob.length > 0 ? `${selectedLob.join(", ")} (${selectedLob.length})` : "Select LOB"}
+                                            <span className="dropdown-arrow">
+                                                <FaAngleDown />
                                             </span>
                                         </div>
-                                        {isLobDropdownOpen && (
-                                            <ul className="dropdown-menu">
-                                                {["SUV", "Hatchback", "Sedan"].map((lob) => (
-                                                    <li
-                                                        key={lob}
-                                                        className={`dropdown-item ${selectedLob.includes(lob) ? "selected" : ""
-                                                            }`}
-                                                        onClick={() => handleLobSelection(lob)}
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedLob.includes(lob)}
-                                                            onChange={() => handleLobSelection(lob)}
-                                                        />
-                                                        {lob}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
+                                        <ul className="dropdown-menu">
+                                            {["SUV", "Hatchback", "Sedan"].map((lob) => (
+                                                <li
+                                                    key={lob}
+                                                    className={`dropdown-item ${selectedLob.includes(lob) ? "selected" : ""}`}
+                                                    onClick={() => handleLobSelection(lob)}
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedLob.includes(lob)}
+                                                        onChange={() => handleLobSelection(lob)}
+                                                    />
+                                                    {lob}
+                                                </li>
+                                            ))}
+                                        </ul>
                                     </div>
+
                                 </div>
                                 <div className="field">
                                     <label>RTM:</label>
@@ -263,58 +253,61 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
 
                 {activeStep === 1 && (
                     <div className="preview-step">
-                        <h3>Ready to Create</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Metric Name</th>
-                                    <th>Geo</th>
-                                    <th>LOB</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {previewRows.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.name}</td>
-                                        <td>{row.geo}</td>
-                                        <td>{row.lob}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        {alreadyExist.length > 0 && (
-                            <>
-                                <h3>Already Exist</h3>
-                                <table>
+
+                        <h3>Ready to Create ( {previewRows.length} ) </h3>
+                        <div className="preview-step-table">
+                            {previewRows.length > 0 && (
+                                <table border="1" className="metrics-table" >
                                     <thead>
                                         <tr>
-                                            <th>Metric Name</th>
-                                            <th>Geo</th>
-                                            <th>LOB</th>
+                                            <THead tHeader={tHeader} />
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {alreadyExist.map((row, index) => (
-                                            <tr key={index}>
-                                                <td>{row.name}</td>
-                                                <td>{row.geo}</td>
-                                                <td>{row.lob}</td>
-                                            </tr>
+                                        {previewRows.map((row, index) => (
+                                            <ExpandedRow
+                                                key={index}
+                                                row={row}
+                                                preview={true}
+                                            />
                                         ))}
                                     </tbody>
                                 </table>
-                            </>
+                            )}
+                        </div>
+
+                        <h3>Already Exist ( {alreadyExist.length} )</h3>
+                        {alreadyExist.length > 0 && (
+
+                            <div className="preview-step-table">
+                                <table border="1" className="metrics-table" >
+                                    <thead>
+                                        <THead tHeader={tHeader} />
+                                    </thead>
+                                    <tbody>
+                                        {alreadyExist.map((row, index) => (
+                                            <ExpandedRow
+                                                key={index}
+                                                row={row}
+                                                preview={true}
+                                            />
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+
                         )}
                     </div>
                 )}
 
                 <div className="modal-footer">
-                    <button onClick={onClose}>Cancel</button>
-                    {activeStep > 0 && <button onClick={handleBack}>Back</button>}
+                    <button onClick={onClose} className="cancel-button" >Cancel</button>
+                    {activeStep > 0 && <button onClick={handleBack} className="back-button" >Back</button>}
                     {activeStep === 1 ? (
                         <button onClick={handleCreateRows}>Create Rows</button>
                     ) : (
-                        <button onClick={handleNext}>Next</button>
+                        <button onClick={handleNext} className="next-button" >Next</button>
                     )}
                 </div>
             </div>

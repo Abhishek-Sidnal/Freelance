@@ -1,9 +1,12 @@
 import React, { memo } from "react";
 
-const ExpandedRow = memo(({ row }) => (
+const ExpandedRow = memo(({ row, preview = false }) => (
     <tr>
-        <td></td>
-        <td></td>
+        {!preview ? <>
+            <td></td>
+            <td></td>
+        </> : ""
+        }
         <td>{row.name}</td>
         <td>{row.geo}</td>
         <td>{row.lob}</td>
