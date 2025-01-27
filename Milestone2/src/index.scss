@@ -232,11 +232,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: $primary-bg-color;
+    background-color: $primary-bg-color; // #564f4f
     padding: 10px;
-    border: 1px solid $primary-bg-color;
+    border: 1px solid $primary-bg-color; // #564f4f
     border-radius: 8px;
-    color: $primary-text-color;
+    color: $primary-text-color; // #ccc
     cursor: pointer;
 
     .dropdown-arrow {
@@ -244,6 +244,11 @@ body {
       align-items: center;
       font-size: 1.2rem;
       transition: transform 0.3s ease;
+
+      // Rotate arrow when dropdown is open
+      &.open {
+        transform: rotate(180deg);
+      }
     }
 
     &:hover {
@@ -257,14 +262,14 @@ body {
     left: 0;
     z-index: 1000;
     width: 100%;
-    background-color: $secondary-bg-color;
-    border: 1px solid $primary-bg-color;
+    background-color: $secondary-bg-color; // #262424
+    border: 1px solid $primary-bg-color; // #564f4f
     border-radius: 8px;
     padding: 10px;
     margin-top: 5px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
     transition: opacity 0.3s ease, transform 0.3s ease;
 
     li {
@@ -274,36 +279,29 @@ body {
       padding: 8px;
       border-radius: 6px;
       font-size: 0.9rem;
-      color: $primary-text-color;
+      color: $primary-text-color; // #ccc
       cursor: pointer;
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: $primary-bg-color;
+        background-color: $primary-bg-color; // #564f4f
       }
 
       input[type="checkbox"] {
         margin-right: 10px;
-        accent-color: $primary-bg-color;
+        accent-color: $primary-bg-color; // #564f4f
         transform: scale(1.2);
       }
     }
   }
 
-  // Toggle menu visibility and rotate the arrow on hover
-  &:hover {
-    .dropdown-menu {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    .dropdown-arrow {
-      transform: rotate(180deg);
-    }
+  // Hide dropdown menu when not open
+  .dropdown-menu.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
   }
 }
-
 
 .preview-step {
   display: flex;
@@ -371,6 +369,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 6px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
 
     h2 {
       font-size: 18px;
@@ -400,11 +399,12 @@ body {
   }
 
   .geo-column:last-child {
-    flex: 1 1 100%;
+    flex: 1;
     text-align: left;
 
     p {
       font-size: 16px;
+      margin-bottom: 5px;
       font-weight: bold;
       color: #0073e6;
     }
@@ -421,6 +421,7 @@ body {
 
 // Dropdown
 .dropdown-container {
+  position: relative;
   display: inline-block;
   margin-right: 1rem;
 
@@ -448,8 +449,6 @@ body {
     top: 100%;
     left: 0;
     z-index: 1000;
-    display: none;
-    /* Initially hidden */
     width: 200px;
     padding: 0.5rem;
     background-color: #fff;
@@ -474,8 +473,62 @@ body {
       font-size: 0.85rem;
     }
   }
+}
 
-  &:hover .dropdown-menu {
-    display: block;
+
+// Cancel confirmation popup
+.cancel-confirmation-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1100;
+  width: 400px;
+  background-color: $secondary-bg-color; // #262424
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+
+  p {
+    color: $primary-text-color; // #ccc
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 20px;
   }
+
+  .confirmation-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 10px;
+
+    button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+
+      &.confirm-button {
+        background-color: green;
+        color: white;
+      }
+
+      &.cancel-button {
+        background-color: red;
+        color: white;
+      }
+    }
+  }
+}
+
+// Overlay for cancel popup
+.cancel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1090;
 }

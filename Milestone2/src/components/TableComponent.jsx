@@ -95,11 +95,17 @@ const TableComponent = () => {
         }));
     };
 
+    // Helper to check if all metrics are expanded
+    const allMetricsExpanded = useMemo(
+        () => expandedMetrics.size === metrics.length,
+        [expandedMetrics, metrics]
+    );
+
     // Expand/collapse state management
     const toggleExpandState = (metricID = null) => {
         setExpandedMetrics((prev) => {
             if (metricID === null) {
-                return expandAll ? new Set() : new Set(metrics.map((metric) => metric.metricID));
+                return allMetricsExpanded ? new Set() : new Set(metrics.map((metric) => metric.metricID));
             }
             const newSet = new Set(prev);
             if (newSet.has(metricID)) newSet.delete(metricID);
@@ -109,6 +115,7 @@ const TableComponent = () => {
     };
 
     const toggleExpand = (metricID) => toggleExpandState(metricID);
+
     const toggleExpandAll = () => {
         setExpandAll((prev) => !prev);
         toggleExpandState();
@@ -146,20 +153,21 @@ const TableComponent = () => {
                 <button
                     className="toggle-expand-collapse"
                     onClick={toggleExpandAll}
-                    aria-expanded={expandAll}
-                    aria-label={expandAll ? "Collapse all metrics" : "Expand all metrics"}
+                    aria-expanded={allMetricsExpanded}
+                    aria-label={allMetricsExpanded ? "Collapse all metrics" : "Expand all metrics"}
                 >
-                    {expandAll ? "Collapse All" : "Expand All"}
+                    {allMetricsExpanded ? "Collapse All" : "Expand All"}
                 </button>
             </div>
 
-            <div className="table-container" >
+            <div className="table-container">
                 <table className="metrics-table">
                     <thead>
                         <tr>
                             <th>Action</th>
                             <th className="metric-id-header">
-                                <div className="header" > Metric ID
+                                <div className="header">
+                                    Metric ID
                                     <FilterDropdown
                                         label="Filter"
                                         options={Array.from(new Set(metrics.map((m) => m.metricID)))}
@@ -180,34 +188,41 @@ const TableComponent = () => {
                                 </div>
                             </th>
                             <th className="geo-header">
-                                <div className="header">Geo
+                                <div className="header">
+                                    Geo
                                     <FilterDropdown
                                         label="Filter"
                                         options={allGeos}
                                         selectedOptions={filters.geoFilter}
                                         onFilterChange={(value) => handleFilterChange("geoFilter", value)}
-                                    /></div>
+                                    />
+                                </div>
                             </th>
                             <th className="lob-header">
-                                <div className="header">LOB
+                                <div className="header">
+                                    LOB
                                     <FilterDropdown
                                         label="Filter"
                                         options={allLobs}
                                         selectedOptions={filters.lobFilter}
                                         onFilterChange={(value) => handleFilterChange("lobFilter", value)}
-                                    /></div>
+                                    />
+                                </div>
                             </th>
                             <th className="rtm-header">
-                                <div className="header"> RTM
+                                <div className="header">
+                                    RTM
                                     <FilterDropdown
                                         label="Filter"
                                         options={allRtms}
                                         selectedOptions={filters.rtmFilter}
                                         onFilterChange={(value) => handleFilterChange("rtmFilter", value)}
-                                    /></div>
+                                    />
+                                </div>
                             </th>
                             <th className="same-day-domestic-header">
-                                <div className="header"> Same Day Domestic
+                                <div className="header">
+                                    Same Day Domestic
                                     <FilterDropdown
                                         label="Filter"
                                         options={allSameDayDomestic}
@@ -215,7 +230,8 @@ const TableComponent = () => {
                                         onFilterChange={(value) =>
                                             handleFilterChange("sameDayDomesticFilter", value)
                                         }
-                                    /></div>
+                                    />
+                                </div>
                             </th>
                             <th>Metric Type</th>
                             <th>Metric Floor</th>
@@ -241,12 +257,12 @@ const TableComponent = () => {
 
                                 const filteredRows = metric.rows
                                     ? metric.rows.filter(
-                                        (row) =>
-                                            !filters.geoFilter.includes(row.geo) &&
-                                            !filters.lobFilter.includes(row.lob) &&
-                                            !filters.rtmFilter.includes(row.rtm) &&
-                                            !filters.sameDayDomesticFilter.includes(row.sameDayDomestic)
-                                    )
+                                          (row) =>
+                                              !filters.geoFilter.includes(row.geo) &&
+                                              !filters.lobFilter.includes(row.lob) &&
+                                              !filters.rtmFilter.includes(row.rtm) &&
+                                              !filters.sameDayDomesticFilter.includes(row.sameDayDomestic)
+                                      )
                                     : [];
 
                                 return (
@@ -254,7 +270,7 @@ const TableComponent = () => {
                                         <MetricRow
                                             metric={metric}
                                             isExpanded={isExpanded}
-                                            onToggleExpand={toggleExpand}
+                                            onToggleExpand={() => toggleExpand(metric.metricID)}
                                             onOpenModal={handleOpenModal}
                                         />
                                         {isExpanded &&

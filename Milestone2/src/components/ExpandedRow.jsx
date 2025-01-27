@@ -2,11 +2,7 @@ import React, { memo } from "react";
 
 const ExpandedRow = memo(({ row, preview = false }) => (
     <tr>
-        {!preview ? <>
-            <td></td>
-            <td></td>
-        </> : ""
-        }
+        {!preview ? <td colSpan="2" ></td> : ""}
         <td>{row.name}</td>
         <td>{row.geo}</td>
         <td>{row.lob}</td>

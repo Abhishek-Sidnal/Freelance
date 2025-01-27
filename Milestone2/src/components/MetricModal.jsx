@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { GeoContext } from "../context/GeoContext";
 import GeoSelector from "./GeoSelector";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { tHeader } from "../constant/Data";
-import ExpandedRow from "./ExpandedRow"
+import ExpandedRow from "./ExpandedRow";
 import THead from "./THead";
+
 const MetricModal = ({ open, onClose, metric, onAddRows }) => {
     const { selectedColumns, resetAll } = useContext(GeoContext);
     const [activeStep, setActiveStep] = useState(0);
@@ -23,13 +24,28 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
     const [rankingMetric, setRankingMetric] = useState("yes");
     const [previewRows, setPreviewRows] = useState([]);
     const [alreadyExist, setAlreadyExist] = useState([]); // Existing rows
-
-
+    const [error, setError] = useState(""); // Validation error
+    const [showCancelConfirm, setShowCancelConfirm] = useState(false); // Cancel confirmation
+    const dropdownRef = useRef(null); // Ref for the dropdown
 
     // Toggle LOB dropdown
     const toggleLobDropdown = () => {
         setIsLobDropdownOpen((prev) => !prev);
     };
+
+    // Close dropdown when clicking outside
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setIsLobDropdownOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     // Handle LOB selection
     const handleLobSelection = (lob) => {
@@ -45,7 +61,6 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
         const newRows = [];
         const existingRows = [];
 
-        // Iterate over finalSelected Geo and selected LOB to generate rows
         selectedColumns.forEach((geo) => {
             selectedLob.forEach((lob) => {
                 const newRow = {
@@ -65,11 +80,9 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
                     rankingMetric,
                 };
 
-                // Check if row already exists
                 if (
                     metric.rows.some(
-                        (row) =>
-                            row.name === newRow.name && row.geo === newRow.geo
+                        (row) => row.name === newRow.name && row.geo === newRow.geo
                     )
                 ) {
                     existingRows.push(newRow);
@@ -90,6 +103,15 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
 
     const handleNext = () => {
         if (activeStep === 0) {
+            if (selectedColumns.length === 0) {
+                setError("Please select at least one Geo.");
+                return;
+            }
+            if (selectedLob.length === 0) {
+                setError("Please select at least one LOB.");
+                return;
+            }
+            setError(""); // Clear error if validation passes
             generateRows();
         }
         setActiveStep((prev) => prev + 1);
@@ -97,6 +119,18 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
 
     const handleBack = () => {
         setActiveStep((prev) => prev - 1);
+    };
+
+    const handleCancel = () => {
+        setShowCancelConfirm(true);
+    };
+
+    const confirmCancel = (confirm) => {
+        if (confirm) {
+            resetAll();
+            onClose();
+        }
+        setShowCancelConfirm(false);
     };
 
     if (!open) return null;
@@ -111,36 +145,54 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
                 </div>
                 {activeStep === 0 && (
                     <div className="configure-step">
+                        {error && <p className="error-message">{error}</p>}
                         <GeoSelector />
                         <div className="metric-container">
-                            <div className="right-metric" >
-                                <div className="field" >
+                            <div className="right-metric">
+                                <div className="field">
                                     <label>LOB:</label>
-                                    <div className="multi-select-dropdown">
-                                        <div className="dropdown-header">
-                                            {selectedLob.length > 0 ? `${selectedLob.join(", ")} (${selectedLob.length})` : "Select LOB"}
+                                    <div className="multi-select-dropdown" ref={dropdownRef}>
+                                        <div
+                                            className="dropdown-header"
+                                            onClick={toggleLobDropdown}
+                                        >
+                                            {selectedLob.length > 0
+                                                ? `${selectedLob.join(", ")} (${selectedLob.length})`
+                                                : "Select LOB"}
                                             <span className="dropdown-arrow">
-                                                <FaAngleDown />
+                                                {isLobDropdownOpen ? (
+                                                    <FaAngleUp />
+                                                ) : (
+                                                    <FaAngleDown />
+                                                )}
                                             </span>
                                         </div>
-                                        <ul className="dropdown-menu">
-                                            {["SUV", "Hatchback", "Sedan"].map((lob) => (
-                                                <li
-                                                    key={lob}
-                                                    className={`dropdown-item ${selectedLob.includes(lob) ? "selected" : ""}`}
-                                                    onClick={() => handleLobSelection(lob)}
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedLob.includes(lob)}
-                                                        onChange={() => handleLobSelection(lob)}
-                                                    />
-                                                    {lob}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        {isLobDropdownOpen && (
+                                            <ul className="dropdown-menu">
+                                                {["SUV", "Hatchback", "Sedan"].map((lob) => (
+                                                    <li
+                                                        key={lob}
+                                                        className={`dropdown-item ${selectedLob.includes(lob)
+                                                            ? "selected"
+                                                            : ""
+                                                            }`}
+                                                        onClick={() =>
+                                                            handleLobSelection(lob)
+                                                        }
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedLob.includes(lob)}
+                                                            onChange={() =>
+                                                                handleLobSelection(lob)
+                                                            }
+                                                        />
+                                                        {lob}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
                                     </div>
-
                                 </div>
                                 <div className="field">
                                     <label>RTM:</label>
@@ -149,7 +201,7 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
                                         <option value="drop-out">Drop-Out</option>
                                     </select>
                                 </div>
-                                <div className="field" >
+                                <div className="field">
                                     <label>Same Day Domestic:</label>
                                     <select
                                         value={sameDayDomestic}
@@ -162,52 +214,52 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
                             </div>
 
                             <div className="left-metric">
-                                <div className="field" >
-                                    <label htmlFor="metriType" >Metric Type:</label>
+                                <div className="field">
+                                    <label htmlFor="metricType">Metric Type:</label>
                                     <input
-                                        id="metriType"
+                                        id="metricType"
                                         type="text"
                                         value={metricType}
                                         onChange={(e) => setMetricType(e.target.value)}
                                     />
                                 </div>
-                                <div className="field" >
-                                    <label htmlFor="Metric_Ceiling">Metric Ceiling:</label>
+                                <div className="field">
+                                    <label htmlFor="metricCeiling">Metric Ceiling:</label>
                                     <input
-                                        id="Metric_Ceiling"
+                                        id="metricCeiling"
                                         type="text"
                                         value={metricCeiling}
                                         onChange={(e) => setMetricCeiling(e.target.value)}
                                     />
                                 </div>
-                                <div className="field" >
-                                    <label htmlFor="Benchmark_Ceiling">Benchmark Ceiling:</label>
+                                <div className="field">
+                                    <label htmlFor="benchmarkCeiling">Benchmark Ceiling:</label>
                                     <input
-                                        id="Benchmark_Ceiling"
+                                        id="benchmarkCeiling"
                                         type="text"
                                         value={benchmarkCeiling}
                                         onChange={(e) => setBenchmarkCeiling(e.target.value)}
                                     />
                                 </div>
-                                <div className="field" >
-                                    <label htmlFor="Benchmark_Value" >Benchmark Value:</label>
+                                <div className="field">
+                                    <label htmlFor="benchmarkValue">Benchmark Value:</label>
                                     <input
-                                        id="Benchmark_Value"
+                                        id="benchmarkValue"
                                         type="text"
                                         value={benchmarkValue}
                                         onChange={(e) => setBenchmarkValue(e.target.value)}
                                     />
                                 </div>
-                                <div className="field" >
-                                    <label htmlFor="Metric_Floor">Metric Floor:</label>
+                                <div className="field">
+                                    <label htmlFor="metricFloor">Metric Floor:</label>
                                     <input
-                                        id="Metric_Floor"
+                                        id="metricFloor"
                                         type="text"
                                         value={metricFloor}
                                         onChange={(e) => setMetricFloor(e.target.value)}
                                     />
                                 </div>
-                                <div className="field" >
+                                <div className="field">
                                     <label>Benchmark Logic Type:</label>
                                     <select
                                         value={benchmarkLogicType}
@@ -218,26 +270,26 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
                                         <option value="b">B</option>
                                     </select>
                                 </div>
-                                <div className="field" >
-                                    <label htmlFor="Metric_Weight">Metric Weight:</label>
+                                <div className="field">
+                                    <label htmlFor="metricWeight">Metric Weight:</label>
                                     <input
-                                        id="Metric_Weight"
+                                        id="metricWeight"
                                         type="text"
                                         value={metricWeight}
                                         onChange={(e) => setMetricWeight(e.target.value)}
                                     />
                                 </div>
-                                <div className="field" >
-                                    <label htmlFor="Metric_Sign">Metric Sign:</label>
+                                <div className="field">
+                                    <label htmlFor="metricSign">Metric Sign:</label>
                                     <input
-                                        id="Metric_Sign"
+                                        id="metricSign"
                                         type="text"
                                         value={metricSign}
                                         onChange={(e) => setMetricSign(e.target.value)}
                                     />
                                 </div>
-                                <div className="field" >
-                                    <label >Ranking Metric:</label>
+                                <div className="field">
+                                    <label>Ranking Metric:</label>
                                     <select
                                         value={rankingMetric}
                                         onChange={(e) => setRankingMetric(e.target.value)}
@@ -253,11 +305,10 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
 
                 {activeStep === 1 && (
                     <div className="preview-step">
-
-                        <h3>Ready to Create ( {previewRows.length} ) </h3>
-                        <div className="preview-step-table">
-                            {previewRows.length > 0 && (
-                                <table border="1" className="metrics-table" >
+                        <h3>Ready to Create ({previewRows.length})</h3>
+                        {previewRows.length > 0 && (
+                            <div className="preview-step-table">
+                                <table border="1" className="metrics-table">
                                     <thead>
                                         <tr>
                                             <THead tHeader={tHeader} />
@@ -265,52 +316,75 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
                                     </thead>
                                     <tbody>
                                         {previewRows.map((row, index) => (
-                                            <ExpandedRow
-                                                key={index}
-                                                row={row}
-                                                preview={true}
-                                            />
-                                        ))}
-                                    </tbody>
-                                </table>
-                            )}
-                        </div>
-
-                        <h3>Already Exist ( {alreadyExist.length} )</h3>
-                        {alreadyExist.length > 0 && (
-
-                            <div className="preview-step-table">
-                                <table border="1" className="metrics-table" >
-                                    <thead>
-                                        <THead tHeader={tHeader} />
-                                    </thead>
-                                    <tbody>
-                                        {alreadyExist.map((row, index) => (
-                                            <ExpandedRow
-                                                key={index}
-                                                row={row}
-                                                preview={true}
-                                            />
+                                            <ExpandedRow key={index} row={row} preview={true} />
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
+                        )}
+                        <h3>Already Exist ({alreadyExist.length})</h3>
+                        {alreadyExist.length > 0 && (
+                            <div className="preview-step-table">
 
-
+                                <table border="1" className="metrics-table">
+                                    <thead>
+                                        <tr>
+                                            <THead tHeader={tHeader} />
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {alreadyExist.map((row, index) => (
+                                            <ExpandedRow key={index} row={row} preview={true} />
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         )}
                     </div>
                 )}
 
                 <div className="modal-footer">
-                    <button onClick={onClose} className="cancel-button" >Cancel</button>
-                    {activeStep > 0 && <button onClick={handleBack} className="back-button" >Back</button>}
+                    <button onClick={handleCancel} className="cancel-button">
+                        Cancel
+                    </button>
+                    {activeStep > 0 && (
+                        <button onClick={handleBack} className="back-button">
+                            Back
+                        </button>
+                    )}
                     {activeStep === 1 ? (
                         <button onClick={handleCreateRows}>Create Rows</button>
                     ) : (
-                        <button onClick={handleNext} className="next-button" >Next</button>
+                        <button onClick={handleNext} className="next-button">
+                            Next
+                        </button>
                     )}
                 </div>
             </div>
+
+            {/* Cancel confirmation popup */}
+            {showCancelConfirm && (
+                <>
+                    <div className="cancel-overlay"></div>
+                    <div className="cancel-confirmation-popup">
+                        <p>Are you sure you want to cancel?</p>
+                        <div className="confirmation-buttons">
+                            <button
+                                className="confirm-button"
+                                onClick={() => confirmCancel(true)}
+                            >
+                                Yes
+                            </button>
+                            <button
+                                className="cancel-button"
+                                onClick={() => confirmCancel(false)}
+                            >
+                                No
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 };
