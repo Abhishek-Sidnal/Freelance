@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaFilter } from "react-icons/fa";
 
-const FilterDropdown = ({ label, options, selectedOptions, onFilterChange }) => {
+const FilterDropdown = ({ label, options, selectedOptions, onFilterChange, disabledOptions = [] }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null); // Ref for the dropdown
 
@@ -37,9 +37,16 @@ const FilterDropdown = ({ label, options, selectedOptions, onFilterChange }) => 
                 <div className="dropdown-menu">
                     {options.length > 0 ? (
                         options.map((option) => (
-                            <label key={option}>
+                            <label
+                                key={option}
+                                style={{
+                                    opacity: disabledOptions.includes(option) ? 0.5 : 1,
+                                    pointerEvents: disabledOptions.includes(option) ? "none" : "auto",
+                                }}
+                            >
                                 <input
                                     type="checkbox"
+                                    disabled={disabledOptions.includes(option)}
                                     checked={!selectedOptions.includes(option)}
                                     onChange={() => onFilterChange(option)}
                                 />

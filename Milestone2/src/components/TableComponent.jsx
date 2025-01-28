@@ -24,6 +24,17 @@ const TableComponent = () => {
         sameDayDomesticFilter: [],
     });
 
+    const metricIDToNameMap = useMemo(() => {
+        return metrics.reduce((acc, metric) => {
+            acc[metric.metricID] = metric.metricName;
+            return acc;
+        }, {});
+    }, [metrics]);
+
+    const disabledMetricNames = useMemo(() => {
+        return filters.metricIDFilter.map((id) => metricIDToNameMap[id]);
+    }, [filters.metricIDFilter, metricIDToNameMap]);
+
     // Compute filtered metrics based on metricIDFilter and metricNameFilter
     const filteredMetrics = useMemo(
         () =>
@@ -87,12 +98,27 @@ const TableComponent = () => {
 
     // Reusable filter change handler
     const handleFilterChange = (filterKey, value) => {
-        setFilters((prevFilters) => ({
-            ...prevFilters,
-            [filterKey]: prevFilters[filterKey].includes(value)
+        setFilters((prevFilters) => {
+            const updatedFilter = prevFilters[filterKey].includes(value)
                 ? prevFilters[filterKey].filter((f) => f !== value)
-                : [...prevFilters[filterKey], value],
-        }));
+                : [...prevFilters[filterKey], value];
+
+            if (filterKey === "metricIDFilter") {
+                const updatedMetricNames = updatedFilter.map((id) => metricIDToNameMap[id]);
+                return {
+                    ...prevFilters,
+                    [filterKey]: updatedFilter,
+                    metricNameFilter: prevFilters.metricNameFilter.filter((name) =>
+                        updatedMetricNames.includes(name)
+                    ),
+                };
+            }
+
+            return {
+                ...prevFilters,
+                [filterKey]: updatedFilter,
+            };
+        });
     };
 
     // Helper to check if all metrics are expanded
@@ -184,6 +210,7 @@ const TableComponent = () => {
                                         options={Array.from(new Set(metrics.map((m) => m.metricName)))}
                                         selectedOptions={filters.metricNameFilter}
                                         onFilterChange={(value) => handleFilterChange("metricNameFilter", value)}
+                                        disabledOptions={disabledMetricNames}
                                     />
                                 </div>
                             </th>
@@ -296,7 +323,7 @@ const TableComponent = () => {
                 </table>
             </div>
             {modalState.isOpen && (
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div className="loading">Loading...</div>}>
                     <MetricModal
                         open={modalState.isOpen}
                         onClose={handleCloseModal}

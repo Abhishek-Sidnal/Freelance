@@ -185,169 +185,173 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
                     </div>
                 </div>
 
-                {activeStep === 0 && (
-                    <div className="configure-step">
-                        {error && <p className="error-message">{error}</p>}
-                        <GeoSelector />
-                        <div className="metric-container">
-                            <div className="right-metric">
-                                <div className="field">
-                                    <label>LOB:</label>
-                                    <div className="multi-select-dropdown" ref={dropdownRef}>
-                                        <div
-                                            className="dropdown-header"
-                                            onClick={toggleLobDropdown}
-                                        >
-                                            {fields.selectedLob.length > 0
-                                                ? `${fields.selectedLob.join(", ")} (${fields.selectedLob.length})`
-                                                : "Select LOB"}
-                                            <span className="dropdown-arrow">
-                                                {isLobDropdownOpen ? (
-                                                    <FaAngleUp />
-                                                ) : (
-                                                    <FaAngleDown />
-                                                )}
-                                            </span>
-                                        </div>
-                                        {isLobDropdownOpen && (
-                                            <ul className="dropdown-menu">
-                                                {["SUV", "Hatchback", "Sedan"].map((lob) => (
-                                                    <li
-                                                        key={lob}
-                                                        className={`dropdown-item ${fields.selectedLob.includes(lob)
-                                                            ? "selected"
-                                                            : ""
-                                                            }`}
-                                                        onClick={() =>
-                                                            toggleLobSelection(lob)
-                                                        }
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={fields.selectedLob.includes(lob)}
-                                                            onChange={() =>
+                <div className="stepper-body">
+                    {activeStep === 0 && (
+                        <div className="configure-step">
+                            {error && <p className="error-message">{error}</p>}
+                            <label>Geo</label>
+
+                            <GeoSelector />
+                            <div className="metric-container">
+                                <div className="right-metric">
+                                    <div className="field">
+                                        <label>LOB:</label>
+                                        <div className="multi-select-dropdown" ref={dropdownRef}>
+                                            <div
+                                                className="dropdown-header"
+                                                onClick={toggleLobDropdown}
+                                            >
+                                                {fields.selectedLob.length > 0
+                                                    ? `${fields.selectedLob.join(", ")} (${fields.selectedLob.length})`
+                                                    : "Select LOB"}
+                                                <span className="dropdown-arrow">
+                                                    {isLobDropdownOpen ? (
+                                                        <FaAngleUp />
+                                                    ) : (
+                                                        <FaAngleDown />
+                                                    )}
+                                                </span>
+                                            </div>
+                                            {isLobDropdownOpen && (
+                                                <ul className="dropdown-menu">
+                                                    {["SUV", "Hatchback", "Sedan"].map((lob) => (
+                                                        <li
+                                                            key={lob}
+                                                            className={`dropdown-item ${fields.selectedLob.includes(lob)
+                                                                ? "selected"
+                                                                : ""
+                                                                }`}
+                                                            onClick={() =>
                                                                 toggleLobSelection(lob)
                                                             }
-                                                        />
-                                                        {lob}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={fields.selectedLob.includes(lob)}
+                                                                onChange={() =>
+                                                                    toggleLobSelection(lob)
+                                                                }
+                                                            />
+                                                            {lob}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="field">
+                                        <label>RTM:</label>
+                                        <select
+                                            value={fields.rtm}
+                                            onChange={(e) => updateField("rtm", e.target.value)}
+                                        >
+                                            <option value="drop-in">Drop-In</option>
+                                            <option value="drop-out">Drop-Out</option>
+                                        </select>
+                                    </div>
+                                    <div className="field">
+                                        <label>Same Day Domestic:</label>
+                                        <select
+                                            value={fields.sameDayDomestic}
+                                            onChange={(e) =>
+                                                updateField("sameDayDomestic", e.target.value)
+                                            }
+                                        >
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
                                     </div>
                                 </div>
-                                <div className="field">
-                                    <label>RTM:</label>
-                                    <select
-                                        value={fields.rtm}
-                                        onChange={(e) => updateField("rtm", e.target.value)}
-                                    >
-                                        <option value="drop-in">Drop-In</option>
-                                        <option value="drop-out">Drop-Out</option>
-                                    </select>
-                                </div>
-                                <div className="field">
-                                    <label>Same Day Domestic:</label>
-                                    <select
-                                        value={fields.sameDayDomestic}
-                                        onChange={(e) =>
-                                            updateField("sameDayDomestic", e.target.value)
-                                        }
-                                    >
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div className="left-metric">
-                                {[
-                                    { label: "Metric Type", key: "metricType" },
-                                    { label: "Metric Ceiling", key: "metricCeiling" },
-                                    { label: "Benchmark Ceiling", key: "benchmarkCeiling" },
-                                    { label: "Benchmark Value", key: "benchmarkValue" },
-                                    { label: "Metric Floor", key: "metricFloor" },
-                                    { label: "Metric Weight", key: "metricWeight" },
-                                    { label: "Metric Sign", key: "metricSign" },
-                                ].map(({ label, key }) => (
-                                    <div className="field" key={key}>
-                                        <label htmlFor={key}>{label}:</label>
-                                        <input
-                                            id={key}
-                                            type="text"
-                                            value={fields[key]}
-                                            onChange={(e) => updateField(key, e.target.value)}
-                                        />
+                                <div className="left-metric">
+                                    {[
+                                        { label: "Metric Type", key: "metricType" },
+                                        { label: "Metric Ceiling", key: "metricCeiling" },
+                                        { label: "Benchmark Ceiling", key: "benchmarkCeiling" },
+                                        { label: "Benchmark Value", key: "benchmarkValue" },
+                                        { label: "Metric Floor", key: "metricFloor" },
+                                        { label: "Metric Weight", key: "metricWeight" },
+                                        { label: "Metric Sign", key: "metricSign" },
+                                    ].map(({ label, key }) => (
+                                        <div className="field" key={key}>
+                                            <label htmlFor={key}>{label}:</label>
+                                            <input
+                                                id={key}
+                                                type="text"
+                                                value={fields[key]}
+                                                onChange={(e) => updateField(key, e.target.value)}
+                                            />
+                                        </div>
+                                    ))}
+                                    <div className="field">
+                                        <label>Benchmark Logic Type:</label>
+                                        <select
+                                            value={fields.benchmarkLogicType}
+                                            onChange={(e) =>
+                                                updateField("benchmarkLogicType", e.target.value)
+                                            }
+                                        >
+                                            <option value="slope">Slope</option>
+                                            <option value="a">A</option>
+                                            <option value="b">B</option>
+                                        </select>
                                     </div>
-                                ))}
-                                <div className="field">
-                                    <label>Benchmark Logic Type:</label>
-                                    <select
-                                        value={fields.benchmarkLogicType}
-                                        onChange={(e) =>
-                                            updateField("benchmarkLogicType", e.target.value)
-                                        }
-                                    >
-                                        <option value="slope">Slope</option>
-                                        <option value="a">A</option>
-                                        <option value="b">B</option>
-                                    </select>
-                                </div>
-                                <div className="field">
-                                    <label>Ranking Metric:</label>
-                                    <select
-                                        value={fields.rankingMetric}
-                                        onChange={(e) =>
-                                            updateField("rankingMetric", e.target.value)
-                                        }
-                                    >
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
+                                    <div className="field">
+                                        <label>Ranking Metric:</label>
+                                        <select
+                                            value={fields.rankingMetric}
+                                            onChange={(e) =>
+                                                updateField("rankingMetric", e.target.value)
+                                            }
+                                        >
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {activeStep === 1 && (
-                    <div className="preview-step">
-                        <h3>Ready to Create ({previewRows.length})</h3>
-                        {previewRows.length > 0 && (
-                            <div className="preview-step-table">
-                                <table border="1" className="metrics-table">
-                                    <thead>
-                                        <tr>
-                                            <THead tHeader={tHeader} />
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {previewRows.map((row, index) => (
-                                            <ExpandedRow key={index} row={row} preview={true} />
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
-                        <h3>Already Exist ({alreadyExist.length})</h3>
-                        {alreadyExist.length > 0 && (
-                            <div className="preview-step-table">
-                                <table border="1" className="metrics-table">
-                                    <thead>
-                                        <tr>
-                                            <THead tHeader={tHeader} />
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {alreadyExist.map((row, index) => (
-                                            <ExpandedRow key={index} row={row} preview={true} />
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
-                    </div>
-                )}
+                    {activeStep === 1 && (
+                        <div className="preview-step">
+                            <h3>Ready to Create ({previewRows.length})</h3>
+                            {previewRows.length > 0 && (
+                                <div className="preview-step-table">
+                                    <table border="1" className="metrics-table">
+                                        <thead>
+                                            <tr>
+                                                <THead tHeader={tHeader} />
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {previewRows.map((row, index) => (
+                                                <ExpandedRow key={index} row={row} preview={true} />
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                            <h3>Already Exist ({alreadyExist.length})</h3>
+                            {alreadyExist.length > 0 && (
+                                <div className="preview-step-table">
+                                    <table border="1" className="metrics-table">
+                                        <thead>
+                                            <tr>
+                                                <THead tHeader={tHeader} />
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {alreadyExist.map((row, index) => (
+                                                <ExpandedRow key={index} row={row} preview={true} />
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
 
                 <div className="modal-footer">
                     <button onClick={handleCancel} className="">
@@ -369,7 +373,6 @@ const MetricModal = ({ open, onClose, metric, onAddRows }) => {
                     )}
                 </div>
             </div>
-
             {/* Cancel confirmation popup */}
             {showCancelConfirm && (
                 <>
