@@ -1,26 +1,24 @@
 import React, { memo } from "react";
-import { FaPlus, FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { FaCaretDown, FaCaretRight, FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { FaCirclePlus } from "react-icons/fa6";
 
 const MetricRow = memo(({ metric, isExpanded, onToggleExpand, onOpenModal }) => (
-    <tr>
+    <tr className="main-row" >
         <td>
             <button className="modal-button" onClick={() => onOpenModal(metric)}>
-                <FaPlus />
+                <FaCirclePlus />
             </button>
         </td>
         <td>
             <div className="expand-column">
                 <button className="modal-button" onClick={() => onToggleExpand(metric.metricID)}>
-                    {isExpanded ? <FaChevronDown /> : <FaChevronRight />}
+                    {isExpanded ? <FaCaretDown /> : <FaCaretRight />}
                 </button>{" "}
                 {metric.metricID}
             </div>
         </td>
         <td>{metric.metricName} </td>
         <td colSpan="16"></td>
-        {/* {Array(13).fill("").map((_, i) => (
-            <td key={i}></td>
-        ))} */}
     </tr>
 ));
 

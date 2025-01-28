@@ -1,19 +1,17 @@
-$primary-bg-color: #564f4f;
-$secondary-bg-color: #262424;
+$primary-bg-color: #ffffff;
+$secondary-bg-color: #ebebeb;
 $primary-box-shadow: 0 0px 10px rgba(255, 255, 255, 0.2);
 $primary-text-color: #ccc;
 $secondary-text-color: #121212;
-
+$table-header-background: #F7F7F7;
+$table-header-text: #242424;
+$table-body-text: #545454;
+$table-body-primary-background: #e4e4e4;
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-body {
-  background-color: #121212;
-  color: $primary-text-color;
 }
 
 .container {
@@ -71,18 +69,25 @@ body {
   th,
   td {
     padding: 10px;
-    border: 1px solid $primary-bg-color;
+    border-bottom: 1px solid $secondary-text-color;
     text-align: left;
     white-space: nowrap;
     font-size: 14px;
+    text-transform: capitalize;
   }
 
   th {
-    background-color: $primary-bg-color;
-    border: 1px solid gray;
+    background-color: $table-header-background;
+    color: $table-header-text;
     font-size: 16px;
+  }
 
+  td {
+    color: $table-body-text;
+  }
 
+  .main-row {
+    background-color: $table-body-primary-background;
   }
 
   .expand-Column {
@@ -97,22 +102,17 @@ body {
   }
 }
 
-
-
 .expand-button,
 .modal-button {
-  background: none;
-  border: none;
-  padding: 5px 10px;
   cursor: pointer;
-  font-size: 0.9rem;
-  color: $primary-text-color;
+  color: $table-body-text;
+  border: none;
+  background-color: transparent;
 
   &:hover {
     background-color: #e6e6e6;
   }
 }
-
 
 .modal-overlay {
   position: fixed;
@@ -129,7 +129,7 @@ body {
 
 .modal-content {
   width: 90%;
-  background-color: $secondary-bg-color;
+  background-color: $primary-bg-color;
   padding: 20px;
   border-radius: 10px;
   box-shadow: $primary-box-shadow;
@@ -138,28 +138,68 @@ body {
   gap: 20px;
 
   h2 {
-    color: $primary-text-color;
+    color: $table-header-text;
     text-align: center;
     font-size: 1.5rem;
   }
 }
 
+
+
 .stepper {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin-bottom: 20px;
 
   .step {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 10px 0;
+    padding: 10px 20px;
     font-weight: bold;
     border-bottom: 2px solid transparent;
-    color: $primary-text-color;
+    color: $secondary-text-color;
+
+    .step-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background-color: $secondary-bg-color;
+      color: $secondary-text-color;
+      border-radius: 50%;
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .step-label {
+      font-size: 0.9rem;
+      color: $secondary-text-color;
+    }
 
     &.active {
-      border-bottom: 2px solid #fff;
+      .step-number {
+        background-color: $primary-bg-color;
+        color: $secondary-text-color;
+        border: 2px solid $secondary-text-color;
+      }
+
+      &.filled {
+        .step-number {
+          background-color: $secondary-text-color;
+          color: $primary-bg-color;
+        }
+      }
     }
+  }
+
+  // Add spacing between steps
+  .step+.step {
+    margin-left: 20px;
   }
 }
 
@@ -187,20 +227,20 @@ body {
 
         label {
           font-size: 0.9rem;
-          color: $primary-text-color; // #ccc;
+          color: $table-body-text;
         }
 
         input,
         select {
           background-color: transparent;
           padding: 10px;
-          border: 1px solid $primary-bg-color; // #564f4f;
+          border: 1px solid $primary-text-color;
           border-radius: 8px;
-          color: $primary-text-color; // #ccc;
+          color: $table-header-text;
           outline: none;
 
           option {
-            background-color: $primary-bg-color; // #564f4f;
+            background-color: $primary-bg-color;
           }
         }
       }
@@ -232,11 +272,10 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: $primary-bg-color; // #564f4f
     padding: 10px;
-    border: 1px solid $primary-bg-color; // #564f4f
+    border: 1px solid $primary-text-color;
     border-radius: 8px;
-    color: $primary-text-color; // #ccc
+    color: $table-header-text;
     cursor: pointer;
 
     .dropdown-arrow {
@@ -279,7 +318,7 @@ body {
       padding: 8px;
       border-radius: 6px;
       font-size: 0.9rem;
-      color: $primary-text-color; // #ccc
+      color: $table-header-text; // #ccc
       cursor: pointer;
       transition: background-color 0.3s ease;
 
@@ -310,7 +349,7 @@ body {
 
 
   h3 {
-    color: $primary-text-color;
+    color: $table-header-text;
   }
 
 
@@ -328,21 +367,20 @@ body {
   gap: 10px;
 
   button {
-    padding: 10px 20px;
+    padding: 5px 10px;
     border-radius: 8px;
-    border: none;
+    border: 1px solid $table-body-text;
+
     cursor: pointer;
     font-size: 1rem;
 
-    &.cancel-button {
-      background-color: red;
+    &.btn {
+      background-color: #0783ff;
       color: white;
+      border: none;
     }
 
-    &.back-button {
-      background-color: $primary-bg-color;
-      color: $primary-text-color;
-    }
+
 
     &.next-button {
       background-color: green;
@@ -352,128 +390,7 @@ body {
 }
 
 
-// Geo- selector
-.geo-selector {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  background-color: $secondary-bg-color;
-  border-radius: 8px;
 
-  .geo-column {
-    height: 350px;
-    min-width: 200px;
-    min-height: 250px;
-    overflow-y: auto;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    white-space: nowrap;
-
-    h2 {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 14px;
-    }
-
-    div {
-      margin-bottom: 8px;
-
-      input[type="checkbox"] {
-        margin-right: 8px;
-        accent-color: #0073e6;
-        transform: scale(1.2);
-        cursor: pointer;
-      }
-
-      label {
-        font-size: 14px;
-        cursor: pointer;
-      }
-    }
-  }
-
-  .geo-column:last-child {
-    flex: 1;
-    text-align: left;
-
-    p {
-      font-size: 16px;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #0073e6;
-    }
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-
-    .geo-column {
-      flex: 1 1 100%;
-    }
-  }
-}
-
-// Dropdown
-.dropdown-container {
-  position: relative;
-  display: inline-block;
-  margin-right: 1rem;
-
-  .dropdown-toggle {
-    background-color: transparent;
-    color: #fff;
-    font-size: 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #0056b3;
-    }
-
-    &:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
-    }
-  }
-
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    width: 200px;
-    padding: 0.5rem;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
-    label {
-      display: flex;
-      align-items: center;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-      cursor: pointer;
-      color: #121212;
-
-      input {
-        margin-right: 0.5rem;
-      }
-    }
-
-    div {
-      font-size: 0.85rem;
-    }
-  }
-}
 
 
 // Cancel confirmation popup
@@ -484,13 +401,13 @@ body {
   transform: translate(-50%, -50%);
   z-index: 1100;
   width: 400px;
-  background-color: $secondary-bg-color; // #262424
+  background-color: $primary-bg-color;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 
   p {
-    color: $primary-text-color; // #ccc
+    color: $table-header-text;
     font-size: 1rem;
     text-align: center;
     margin-bottom: 20px;
@@ -503,7 +420,7 @@ body {
     gap: 10px;
 
     button {
-      padding: 10px 20px;
+      padding: 5px 10px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
@@ -536,4 +453,113 @@ body {
 .error-message {
   color: red;
   text-align: center;
+}
+
+
+// Geo- selector
+.geo-selector {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+  padding: 20px;
+  background-color: $primary-bg-color;
+  border-radius: 8px;
+
+  .geo-column {
+    height: 350px;
+    min-width: 200px;
+    min-height: 250px;
+    overflow-y: auto;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+
+    h2 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: $table-header-text;
+    }
+
+    p {
+      font-size: 14px;
+      color: $table-body-text;
+    }
+
+    div {
+      margin-bottom: 8px;
+
+      input[type="checkbox"] {
+        margin-right: 8px;
+        accent-color: #0073e6;
+        transform: scale(1.2);
+        cursor: pointer;
+      }
+
+      label {
+        font-size: 14px;
+        cursor: pointer;
+        color: $table-body-text;
+
+      }
+    }
+  }
+
+  .geo-column:last-child {
+    flex: 1;
+    text-align: left;
+    background-color: #e4effa;
+
+    p {
+      font-size: 16px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+  }
+}
+
+// Dropdown
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+  margin-right: 1rem;
+
+  .dropdown-toggle {
+    background-color: transparent;
+    color: $primary-text-color;
+    border: none;
+    cursor: pointer;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    width: 200px;
+    padding: 0.5rem;
+    background-color: $primary-bg-color;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    label {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      color: $table-body-text;
+
+      input {
+        margin-right: 0.5rem;
+      }
+    }
+
+    div {
+      font-size: 0.85rem;
+    }
+  }
 }
