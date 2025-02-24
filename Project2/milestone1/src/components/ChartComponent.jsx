@@ -68,7 +68,7 @@ const ChartComponent = ({ data, width = 800, height = 400, colors = d3.schemeCat
       .attr("y", d => yScale(d[1]))
       .attr("height", d => yScale(d[0]) - yScale(d[1]))
       .attr("width", xScale.bandwidth())
-      .on("mousemove", (d) => {
+      .on("mousemove", (event, d) => {
         setTooltipData({
           productName: d.data.productName,
           values: keys.map(k => ({
