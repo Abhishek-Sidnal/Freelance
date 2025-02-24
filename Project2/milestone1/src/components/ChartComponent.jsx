@@ -1,23 +1,21 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import * as d3 from "d3";
-import "./ChartComponent.scss"; // Import SCSS
+import "./ChartComponent.scss";
 
 const ChartComponent = ({ data, width = 800, height = 400, colors = d3.schemeCategory10 }) => {
   const [selectedCategory, setSelectedCategory] = useState(data[0].label);
-  const [tooltipContent, setTooltipContent] = useState(null);
+  const [tooltipData, setTooltipData] = useState(null);
   const svgRef = useRef();
-  const tooltipRef = useRef();
 
   const selectedData = useMemo(() => data.find(d => d.label === selectedCategory)?.products || [], [selectedCategory, data]);
   const keys = useMemo(() => (selectedData.length ? Object.keys(selectedData[0].data) : []), [selectedData]);
 
-  // Compute statistics (Memoized)
   const stats = useMemo(() => {
     if (!selectedData.length) return { totalSum: 0, keySums: {}, percentages: {} };
 
     const formattedData = selectedData.map(d => ({ productName: d.productName, ...d.data }));
-
     const totalSum = formattedData.reduce((sum, d) => sum + d3.sum(keys, k => d[k]), 0);
+
     const keySums = keys.reduce((acc, key) => {
       acc[key] = d3.sum(formattedData, d => d[key]);
       return acc;
@@ -30,11 +28,11 @@ const ChartComponent = ({ data, width = 800, height = 400, colors = d3.schemeCat
     return { totalSum, keySums, percentages, formattedData };
   }, [selectedData, keys]);
 
-  useEffect(() => {
+  const drawChart = useCallback(() => {
     if (!selectedData.length) return;
 
     const { formattedData } = stats;
-    const margin = { top: 30, right: 30, bottom: 50, left: 50 };
+    const margin = { top: 30, right: 30, bottom: 80, left: 50 };
 
     const svg = d3.select(svgRef.current)
       .attr("width", width)
@@ -56,7 +54,6 @@ const ChartComponent = ({ data, width = 800, height = 400, colors = d3.schemeCat
     const stackGenerator = d3.stack().keys(keys);
     const layers = stackGenerator(formattedData);
 
-    // Append Groups for Stacked Bars
     const bars = svg.selectAll(".layer")
       .data(layers)
       .enter()
@@ -71,44 +68,41 @@ const ChartComponent = ({ data, width = 800, height = 400, colors = d3.schemeCat
       .attr("y", d => yScale(d[1]))
       .attr("height", d => yScale(d[0]) - yScale(d[1]))
       .attr("width", xScale.bandwidth())
-      .on("mouseover", (_, d) => {
-        const values = keys.map(k => ({
-          key: k,
-          value: d.data[k],
-          color: colorScale(k)
-        }));
-
-        setTooltipContent(
-          <div>
-            <h3 className="strong">{d.data.productName}</h3>
-            {values.map(v => (
-              <div className="data" key={v.key}>
-                <div className="label">
-                  <span className="key-circle" style={{ backgroundColor: v.color }}></span>
-                  <span> {v.key}</span>
-                </div>
-                <span>{v.value}</span>
-              </div>
-            ))}
-          </div>
-        );
+      .on("mousemove", (d) => {
+        setTooltipData({
+          productName: d.data.productName,
+          values: keys.map(k => ({
+            key: k,
+            value: d.data[k],
+            color: colorScale(k)
+          })),
+        });
       })
-      .on("mouseout", () => setTooltipContent(null));
+      .on("mouseleave", () => setTooltipData(null));
 
-    // X-Axis
-    svg.append("g")
+    // vertical labels
+    const xAxis = svg.append("g")
       .attr("transform", `translate(0, ${height - margin.bottom})`)
       .call(d3.axisBottom(xScale));
 
-    // Y-Axis
+    xAxis.selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-0.8em")
+      .attr("dy", "0.15em")
+      .attr("transform", "rotate(-45)");
+
     svg.append("g")
       .attr("transform", `translate(${margin.left}, 0)`)
       .call(d3.axisLeft(yScale));
   }, [selectedCategory, stats, width, height, colors]);
 
+
+  useEffect(() => {
+    drawChart();
+  }, [drawChart]);
+
   return (
     <div className="stacked-bar-container">
-      {/* SideBar */}
       <div className="summary">
         <span className="summary-title">Total {selectedCategory} Sold</span>
         <p className="summary-total">{stats.totalSum || 0}</p>
@@ -127,7 +121,6 @@ const ChartComponent = ({ data, width = 800, height = 400, colors = d3.schemeCat
       </div>
 
       <div className="chart-wrapper">
-        {/* Tabs */}
         <div className="tabs">
           {data.map(({ label }) => (
             <button
@@ -140,13 +133,23 @@ const ChartComponent = ({ data, width = 800, height = 400, colors = d3.schemeCat
           ))}
         </div>
 
-        {/* Tooltip */}
-
-        <div className={`tooltip ${tooltipContent ? "visible" : ""}`} ref={tooltipRef}>
-          {tooltipContent}
-        </div>
-
-        {/*  Chart */}
+        {tooltipData && (
+          <div
+            className="tooltip visible"
+          >
+            <h3 className="strong">{tooltipData.productName}</h3>
+            {tooltipData.values.map((item, index) => (
+              <div className="data" key={index}>
+                <div className="label">
+                  <span className="key-circle" style={{ backgroundColor: item.color }}></span>
+                  <span> {item.key}</span>
+                </div>
+                <span>{item.value}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {/* Chart */}
         <svg ref={svgRef} className="chart-c" />
       </div>
     </div>
