@@ -1,0 +1,67 @@
+@use '../index.scss' as *; 
+
+
+.data-table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+
+
+    th,
+    td {
+        text-align: left;
+        padding: 10px 12px;
+        border: 1px solid $tooltip-border;
+        text-overflow: ellipsis;
+        font-size: 14px;
+    }
+
+    th {
+        background-color: $background-light;
+        font-weight: bold;
+        cursor: pointer;
+
+        svg {
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+    }
+
+    td {
+        color: $text-color;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f1f1f1;
+    }
+}
+
+// Responsive adjustments
+@media (max-width: $tablet-breakpoint) {
+    .table-container {
+        .data-table {
+
+            th,
+            td {
+                padding: 8px;
+                font-size: 13px;
+            }
+        }
+    }
+}
+
+@media (max-width: $mobile-breakpoint) {
+    .table-container {
+        overflow-x: scroll;
+
+        .data-table {
+
+            th,
+            td {
+                padding: 6px;
+                font-size: 12px;
+            }
+        }
+    }
+}
