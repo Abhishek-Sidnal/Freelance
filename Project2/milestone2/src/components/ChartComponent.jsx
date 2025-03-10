@@ -221,9 +221,13 @@ const ChartComponent = ({ data, width = 800, height = 400 }) => {
           </div>
         </div>
 
-        <button className="clear-btn" onClick={() => setSelectedKeys([])}>
-          Clear All Selection
-        </button>
+        {
+          selectedKeys.length > 0 &&
+
+          <button className="clear-btn" onClick={() => setSelectedKeys([])}>
+            Clear All Selection
+          </button>
+        }
         {activeTab === "chart" ? (
           <>
             {tooltipData && (
