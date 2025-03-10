@@ -86,6 +86,8 @@
 
                 &:hover {
                     cursor: pointer;
+                    background-color: #1c398821;
+
                 }
 
                 &.selected {
@@ -130,26 +132,35 @@
                     right: -80%;
                     height: 100%;
                     background-color: $background-light;
-                    border-radius: $border-radius;
+                    background-color: #c7d6ff;
                     box-shadow: $box-shadow;
                     min-width: 250px;
                     max-width: 400px;
-                    display: block;
+                    display:flex;
+                    flex-direction: column;
+                    gap: 10px;
                     overflow-y: auto;
+
+                    .close-button{
+                        margin-left: auto;
+                    }
 
                     .key-details-header {
                         display: flex;
                         justify-content: space-between;
+                        width: 100%;
                         font-weight: bold;
-                        margin-bottom: 10px;
+                        padding-bottom: 5px;
+                        border-bottom: 1px solid $secondary-color;
                     }
 
                     .product-details {
                         display: flex;
                         justify-content: space-between;
                         font-size: 14px;
-                        margin-bottom: 5px;
+                        gap: 10px;
                     }
+
                 }
             }
         }

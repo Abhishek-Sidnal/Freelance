@@ -177,9 +177,12 @@ const ChartComponent = ({ data, width = 800, height = 400 }) => {
               </div>
               {showKeyDetails === key && (
                 <div className="key-details" onClick={(e) => e.stopPropagation()} >
+                  <button className="close-button" onClick={(e) => { e.stopPropagation(), toggleKeyDetails(key) }}>×</button>
                   <div className="key-details-header">
-                    <span>{key} -- {stats.keySums[key]}</span>
-                    <button className="close-button" onClick={(e) => { e.stopPropagation(), toggleKeyDetails(key) }}>×</button>
+                    <span>{key}</span>
+                    <span>
+                      {stats.keySums[key]}
+                    </span>
                   </div>
                   {selectedData.map(product => (
                     <div key={product.productName} className="product-details">
