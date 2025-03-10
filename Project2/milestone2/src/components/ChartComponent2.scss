@@ -1,4 +1,4 @@
-@import '../index.scss';
+@use '../index.scss' as *;
 
 .key-circle {
     width: 10px;
@@ -6,8 +6,6 @@
     border-radius: 3px;
     display: inline-block;
 }
-
-
 
 .close-button {
     cursor: pointer;
