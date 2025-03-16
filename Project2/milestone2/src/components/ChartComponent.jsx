@@ -1,12 +1,9 @@
 import React, { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import * as d3 from "d3";
-// import DataTable from './DataTable';
 import "./ChartComponent2.scss";
 import { IoBarChartSharp } from "react-icons/io5";
 import { FaTableList } from "react-icons/fa6";
 import { SlOptions } from "react-icons/sl";
-import { FaCaretDown, FaCaretUp } from "react-icons/fa";
-import { TbCaretUpDownFilled } from "react-icons/tb";
 import DataTable from "./DataTable";
 
 const ChartComponent = ({ data, width = 800, height = 400 }) => {
@@ -117,8 +114,8 @@ const ChartComponent = ({ data, width = 800, height = 400 }) => {
   }, [drawChart, activeTab]);
 
   useEffect(() => {
-    setSelectedKeys([]);  // Reset selected keys on category change
-    setSortConfig({ key: null, direction: "asc" });  // Reset sorting on category change
+    setSelectedKeys([]);
+    setSortConfig({ key: null, direction: "asc" });
   }, [selectedCategory]);
 
   const handleSort = (key) => {
@@ -147,13 +144,13 @@ const ChartComponent = ({ data, width = 800, height = 400 }) => {
     return sorted;
   }, [sortConfig, stats.formattedData]);
 
-  // Function to toggle key details
   const toggleKeyDetails = (key) => {
-    setShowKeyDetails(showKeyDetails === key ? null : key); // Toggle visibility of key details
+    setShowKeyDetails(showKeyDetails === key ? null : key);
   };
 
   return (
     <div className="stacked-bar-container">
+      {/* sidebar */}
       <div className="summary-wrapper">
         <div className="summary">
           <span className="summary-title">Total {selectedCategory} Sold</span>
@@ -197,6 +194,7 @@ const ChartComponent = ({ data, width = 800, height = 400 }) => {
         </div>
       </div>
 
+      {/* chart */}
       <div className="chart-wrapper">
         <div className="section-header">
           <div className="tabs">

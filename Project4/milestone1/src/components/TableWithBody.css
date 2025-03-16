@@ -1,0 +1,26 @@
+.full-width-table {
+    width: 100%;
+}
+
+.header-table {
+    background-color: yellow;
+}
+
+.header-row {
+    background-color: #0070C0;
+    color: white;
+}
+
+td,
+th {
+    padding: 8px;
+    text-align: center;
+}
+
+td {
+    border: 1px solid #ddd;
+}
+
+th {
+    border: 1px solid #0070C0;
+}
