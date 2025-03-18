@@ -263,61 +263,65 @@ const TableWithBody = () => {
             </div>
 
             {/* Table */}
-            <table style={{ width: "100%" }}>
-                <thead>
-                    <tr>
-                        <th colSpan="3" className="mainHeader" >
-                            <table border="1" >
-                                <tbody>
-                                    <tr>
-                                        <td >Country</td>
-                                        <td >Ways to Buy</td>
-                                        <td >As of Date</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="headerHighlight" >{selectedCountries}</td>
-                                        <td className="headerHighlight" >{selectedWaysToBuy}</td>
-                                        <td className="headerHighlight" >{selectedDate}</td>
-                                    </tr>
-                                    <tr>
-                                        <th className="blueHeader" >Country</th>
-                                        <th className="blueHeader" >ways to buy</th>
-                                        <th className="blueHeader" >Bags Status</th>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </th>
-
-                        {filteredDates.map((date, index) => (
-                            <th key={date.id} colSpan="3">
-                                <table border="1" className="tbody" >
+            <div className="table">
+                <table >
+                    <thead>
+                        <tr>
+                            <th colSpan="3" className="mainHeader" >
+                                <table border="1" >
                                     <tbody>
                                         <tr>
-                                            <td colSpan="3" >{`Till Day  ${8 - index} (EOD) - ${date.label}`}</td>
+                                            <td >Country</td>
+                                            <td >Ways to Buy</td>
+                                            <td >As of Date</td>
                                         </tr>
                                         <tr>
-                                            <td colSpan="3" >
-                                                09/09/2024 - 09/16/2024
-                                            </td>
+                                            <td className="headerHighlight" >{selectedCountries}</td>
+                                            <td className="headerHighlight" >{selectedWaysToBuy}</td>
+                                            <td className="headerHighlight" >{selectedDate}</td>
                                         </tr>
                                         <tr>
-                                            <th className="blueHeader">GBI</th>
-                                            <th className="blueHeader" >AOS</th>
-                                            <th className="blueHeader" >FSI</th>
+                                            <th className="blueHeader" >Country</th>
+                                            <th className="blueHeader" >ways to buy</th>
+                                            <th className="blueHeader" >Bags Status</th>
                                         </tr>
                                     </tbody>
                                 </table>
                             </th>
-                        ))}
-                    </tr>
 
-                </thead>
-                <tbody>{generateRows().map((row) => (
-                    <>
-                        {row}
-                    </>
-                ))}</tbody>
-            </table>
+                            {filteredDates.map((date, index) => (
+                                <th key={date.id} colSpan="3">
+                                    <table border="1" className="tbody" >
+                                        <tbody>
+                                            <tr>
+                                                <td colSpan="3" >{`Till Day  ${8 - index} (EOD) - ${date.label}`}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colSpan="3" >
+                                                    {selectedDate} - {date.label}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th className="blueHeader">GBI</th>
+                                                <th className="blueHeader" >AOS</th>
+                                                <th className="blueHeader" >FSI</th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </th>
+                            ))}
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        {generateRows().map((row) => (
+                            <>
+                                {row}
+                            </>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
