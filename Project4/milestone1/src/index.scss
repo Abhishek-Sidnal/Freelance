@@ -53,7 +53,7 @@ table {
 
 
 .tbody {
-    background-color: yellow;
+    // background-color: yellow;
 }
 
 
@@ -82,22 +82,23 @@ table {
         padding: 5px;
     }
 
-    th{
+    th {
         min-width: 160px;
     }
 
-    .headerHighlight{
+    .headerHighlight {
         background-color: rgb(209, 209, 61);
     }
 
-    .blueHeader{
+    .blueHeader {
         background-color: skyblue;
     }
 
-    .lightGreenHeader{
+    .lightGreenHeader {
         background-color: lightgreen;
     }
-    .mainHeader{
+
+    .mainHeader {
         position: sticky;
         left: 0;
         z-index: 100;
@@ -105,4 +106,24 @@ table {
     }
 
 
+}
+
+
+
+.container {
+    width: 100%;
+    overflow: auto;
+}
+
+button {
+    background-color: #18b7f7;
+    border: none;
+    padding: 10px;
+    color: white;
+}
+
+
+.filter-header {
+    display: flex;
+    align-items: center;
 }

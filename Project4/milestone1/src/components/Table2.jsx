@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import './MultiSelectDropdown.scss'
 // MultiSelectDropdown Component
 const MultiSelectDropdown = ({ options = [], selectedValues, onChange, label }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -176,12 +176,12 @@ const TableWithBody = () => {
 
                                             {/* Bag Status */}
                                             <td className={`bodyHeader ${status === "Total Bags Created" ||
-                                                    status === "Total Bags Deleted" ||
-                                                    status === "Total Bags Ordered"
-                                                    ? "blueHeader"
-                                                    : status === "Open Bags"
-                                                        ? "lightGreenHeader"
-                                                        : ""
+                                                status === "Total Bags Deleted" ||
+                                                status === "Total Bags Ordered"
+                                                ? "blueHeader"
+                                                : status === "Open Bags"
+                                                    ? "lightGreenHeader"
+                                                    : ""
                                                 }`}>{status}</td>
                                         </tr>
                                     ))}
@@ -195,15 +195,15 @@ const TableWithBody = () => {
                                 <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
                                     <tbody>
                                         {bagStatuses.map((status, index) => (
-                                            <tr key={`${country}-${wayCombo.join("-")}-${status}-data-${date.id}`}  
-                                            className={`bodyHeader ${status === "Total Bags Created" ||
-                                                status === "Total Bags Deleted" ||
-                                                status === "Total Bags Ordered"
-                                                ? "blueHeader"
-                                                : status === "Open Bags"
-                                                    ? "lightGreenHeader"
-                                                    : ""
-                                            }`}
+                                            <tr key={`${country}-${wayCombo.join("-")}-${status}-data-${date.id}`}
+                                                className={`bodyHeader ${status === "Total Bags Created" ||
+                                                    status === "Total Bags Deleted" ||
+                                                    status === "Total Bags Ordered"
+                                                    ? "blueHeader"
+                                                    : status === "Open Bags"
+                                                        ? "lightGreenHeader"
+                                                        : ""
+                                                    }`}
                                             >
                                                 <td>{Math.round(Math.random() * 10000)}</td> {/* GBI */}
                                                 <td>{Math.round(Math.random() * 10000)}</td> {/* AOS */}
@@ -224,30 +224,41 @@ const TableWithBody = () => {
 
 
     return (
-        <div>
+        <div className="container">
             {/* Filter Header */}
             <div className="filter-header"
                 style={{ marginBottom: "20px", display: "flex", gap: "10px", whiteSpace: "nowrap" }}
             >
-                <MultiSelectDropdown
-                    options={filter1Options}
-                    selectedValues={selectedCountries}
-                    onChange={setSelectedCountries}
-                    label="Country"
-                />
-                <MultiSelectDropdown
-                    options={filter2Options}
-                    selectedValues={selectedWaysToBuy}
-                    onChange={setSelectedWaysToBuy}
-                    label="Ways to Buy"
-                />
-                <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
-                    {dates.map((date) => (
-                        <option key={date.id} value={date.id}>
-                            {date.label}
-                        </option>
-                    ))}
-                </select>
+                <div className="">
+                    <label htmlFor="">Country</label>
+                    <MultiSelectDropdown
+                        options={filter1Options}
+                        selectedValues={selectedCountries}
+                        onChange={setSelectedCountries}
+                        label="Country"
+                    />
+                </div>
+
+                <div className="">
+                    <label htmlFor="">Ways to Buy</label>
+                    <MultiSelectDropdown
+                        options={filter2Options}
+                        selectedValues={selectedWaysToBuy}
+                        onChange={setSelectedWaysToBuy}
+                        label="Ways to Buy"
+                    />
+                </div>
+
+                <div className="">
+                    <label htmlFor="">As of Date</label>
+                    <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
+                        {dates.map((date) => (
+                            <option key={date.id} value={date.id}>
+                                {date.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
                 <button onClick={applyFilters}>Apply</button>
             </div>
 
