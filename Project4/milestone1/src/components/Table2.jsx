@@ -155,7 +155,7 @@ const TableWithBody = () => {
                 rows.push(
                     <tr key={`group-${country}-${wayCombo.join("-")}`}>
                         {/* First Table (Country, Ways to Buy, Bag Status) */}
-                        <td colSpan="3">
+                        <td colSpan="3" className="mainHeader" >
                             <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
                                 <tbody>
                                     {bagStatuses.map((status, index) => (
@@ -236,10 +236,10 @@ const TableWithBody = () => {
             </div>
 
             {/* Table */}
-            <table style={{ width: "100%" }} border="1">
+            <table style={{ width: "100%" }}>
                 <thead>
                     <tr>
-                        <th colSpan="3">
+                        <th colSpan="3" className="mainHeader" >
                             <table border="1" >
                                 <tbody>
                                     <tr>
@@ -248,14 +248,14 @@ const TableWithBody = () => {
                                         <td >As of Date</td>
                                     </tr>
                                     <tr>
-                                        <td>{selectedCountries}</td>
-                                        <td >{selectedWaysToBuy}</td>
-                                        <td>{selectedDate}</td>
+                                        <td className="headerHighlight" >{selectedCountries}</td>
+                                        <td className="headerHighlight" >{selectedWaysToBuy}</td>
+                                        <td className="headerHighlight" >{selectedDate}</td>
                                     </tr>
                                     <tr>
-                                        <th>Country</th>
-                                        <th>ways to buy</th>
-                                        <th>Bags Status</th>
+                                        <th className="blueHeader" >Country</th>
+                                        <th className="blueHeader" >ways to buy</th>
+                                        <th className="blueHeader" >Bags Status</th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -274,9 +274,9 @@ const TableWithBody = () => {
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>GBI</th>
-                                            <th>AOS</th>
-                                            <th>FSI</th>
+                                            <th className="blueHeader">GBI</th>
+                                            <th className="blueHeader" >AOS</th>
+                                            <th className="blueHeader" >FSI</th>
                                         </tr>
                                     </tbody>
                                 </table>
