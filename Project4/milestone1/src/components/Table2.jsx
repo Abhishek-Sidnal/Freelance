@@ -147,10 +147,10 @@ const TableWithBody = () => {
 
     const generateRows = () => {
         const rows = [];
-    
+
         appliedFilters.countries.forEach((country) => {
             const waysCombinations = generateCombinations(appliedFilters.ways);
-    
+
             waysCombinations.forEach((wayCombo) => {
                 rows.push(
                     <tr key={`group-${country}-${wayCombo.join("-")}`}>
@@ -166,29 +166,45 @@ const TableWithBody = () => {
                                                     {country}
                                                 </td>
                                             )}
-    
+
                                             {/* Ways to Buy spans all bag statuses */}
                                             {index === 0 && (
                                                 <td rowSpan={bagStatuses.length} className="bodyHeader" style={{ backgroundColor: "#f8f8f8", textAlign: "center" }}>
                                                     {wayCombo.join(", ")}
                                                 </td>
                                             )}
-    
+
                                             {/* Bag Status */}
-                                            <td className="bodyHeader">{status}</td>
+                                            <td className={`bodyHeader ${status === "Total Bags Created" ||
+                                                    status === "Total Bags Deleted" ||
+                                                    status === "Total Bags Ordered"
+                                                    ? "blueHeader"
+                                                    : status === "Open Bags"
+                                                        ? "lightGreenHeader"
+                                                        : ""
+                                                }`}>{status}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </td>
-    
+
                         {/* Second Table (GBI, AOS, FSI Data for Each Bag Status & Date) */}
                         {filteredDates.map((date) => (
                             <td colSpan="3" key={`${country}-${wayCombo.join("-")}-${date.id}`}>
                                 <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
                                     <tbody>
                                         {bagStatuses.map((status, index) => (
-                                            <tr key={`${country}-${wayCombo.join("-")}-${status}-data-${date.id}`}>
+                                            <tr key={`${country}-${wayCombo.join("-")}-${status}-data-${date.id}`}  
+                                            className={`bodyHeader ${status === "Total Bags Created" ||
+                                                status === "Total Bags Deleted" ||
+                                                status === "Total Bags Ordered"
+                                                ? "blueHeader"
+                                                : status === "Open Bags"
+                                                    ? "lightGreenHeader"
+                                                    : ""
+                                            }`}
+                                            >
                                                 <td>{Math.round(Math.random() * 10000)}</td> {/* GBI */}
                                                 <td>{Math.round(Math.random() * 10000)}</td> {/* AOS */}
                                                 <td>{Math.round(Math.random() * 10000)}</td> {/* FSI */}
@@ -202,10 +218,10 @@ const TableWithBody = () => {
                 );
             });
         });
-    
+
         return rows;
     };
-    
+
 
     return (
         <div>
