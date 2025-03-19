@@ -8,11 +8,28 @@ const MultiSelectDropdown = ({ options = [], selectedValues, onChange, label }) 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
     const handleOptionClick = (id) => {
-        let updatedSelection = selectedValues.includes(id)
-            ? selectedValues.filter((item) => item !== id)
-            : [...selectedValues, id];
+        // If "All" is clicked, either select all or deselect all
+        if (id === "all") {
+            let updatedSelection = selectedValues.includes(id) ? [] : options.map((opt) => opt.id);
+            onChange(updatedSelection);
+        } else {
+            // Handle regular option selection
+            let updatedSelection = selectedValues.includes(id)
+                ? selectedValues.filter((item) => item !== id)
+                : [...selectedValues, id];
 
-        onChange(updatedSelection);
+            // If all options are selected, select "All"
+            if (updatedSelection.length === options.length) {
+                updatedSelection = ["all", ...updatedSelection.filter((item) => item !== "all")];
+            }
+
+            // If there are no options selected, deselect "All"
+            if (updatedSelection.length < options.length && updatedSelection.includes("all")) {
+                updatedSelection = updatedSelection.filter(item => item !== "all");
+            }
+
+            onChange(updatedSelection);
+        }
     };
 
     const handleClickOutside = (event) => {
@@ -26,7 +43,9 @@ const MultiSelectDropdown = ({ options = [], selectedValues, onChange, label }) 
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const selectedLabels = selectedValues.length === 0
+    const selectedLabels = selectedValues.includes("all")
+        ? "All " + label
+        : selectedValues.length === 0
         ? "Select " + label
         : options
             .filter((opt) => selectedValues.includes(opt.id))
@@ -42,6 +61,13 @@ const MultiSelectDropdown = ({ options = [], selectedValues, onChange, label }) 
 
             {isOpen && (
                 <ul className="dropdown-list">
+                    <li
+                        key="all"
+                        className={selectedValues.includes("all") ? "selected" : ""}
+                        onClick={() => handleOptionClick("all")}
+                    >
+                        All
+                    </li>
                     {options.map((option) => (
                         <li
                             key={option.id}
@@ -87,7 +113,6 @@ const TableWithBody = () => {
     });
 
     const filter1Options = [
-        { id: "all", label: "All" },
         { id: "c1", label: "c1" },
         { id: "c2", label: "c2" },
         { id: "c3", label: "c3" },
@@ -95,7 +120,6 @@ const TableWithBody = () => {
     ];
 
     const filter2Options = [
-        { id: "all", label: "All" },
         { id: "w1", label: "w1" },
         { id: "w2", label: "w2" },
         { id: "w3", label: "w3" },
@@ -156,20 +180,20 @@ const TableWithBody = () => {
                     <tr key={`group-${country}-${wayCombo.join("-")}`}>
                         {/* First Table (Country, Ways to Buy, Bag Status) */}
                         <td colSpan="3" className="mainHeader" >
-                            <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
+                            <table border="1" >
                                 <tbody>
                                     {bagStatuses.map((status, index) => (
                                         <tr key={`${country}-${wayCombo.join("-")}-${status}`}>
                                             {/* Country spans all bag statuses */}
                                             {index === 0 && (
-                                                <td rowSpan={bagStatuses.length} className="bodyHeader" style={{ backgroundColor: "#f8f8f8", textAlign: "center" }}>
+                                                <td rowSpan={bagStatuses.length} className="bodyHeader" >
                                                     {country}
                                                 </td>
                                             )}
 
                                             {/* Ways to Buy spans all bag statuses */}
                                             {index === 0 && (
-                                                <td rowSpan={bagStatuses.length} className="bodyHeader" style={{ backgroundColor: "#f8f8f8", textAlign: "center" }}>
+                                                <td rowSpan={bagStatuses.length} className="bodyHeader" >
                                                     {wayCombo.join(", ")}
                                                 </td>
                                             )}
