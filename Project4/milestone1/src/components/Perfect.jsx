@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import './MultiSelectDropdown.scss'
+import '../index2.scss'
 // MultiSelectDropdown Component
 const MultiSelectDropdown = ({ options = [], selectedValues, onChange, label }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -8,22 +9,18 @@ const MultiSelectDropdown = ({ options = [], selectedValues, onChange, label }) 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
     const handleOptionClick = (id) => {
-        // If "All" is clicked, either select all or deselect all
         if (id === "all") {
             let updatedSelection = selectedValues.includes(id) ? [] : options.map((opt) => opt.id);
             onChange(updatedSelection);
         } else {
-            // Handle regular option selection
             let updatedSelection = selectedValues.includes(id)
                 ? selectedValues.filter((item) => item !== id)
                 : [...selectedValues, id];
 
-            // If all options are selected, select "All"
             if (updatedSelection.length === options.length) {
                 updatedSelection = ["all", ...updatedSelection.filter((item) => item !== "all")];
             }
 
-            // If there are no options selected, deselect "All"
             if (updatedSelection.length < options.length && updatedSelection.includes("all")) {
                 updatedSelection = updatedSelection.filter(item => item !== "all");
             }
@@ -56,14 +53,14 @@ const MultiSelectDropdown = ({ options = [], selectedValues, onChange, label }) 
         <div className="multi-select-dropdown" ref={dropdownRef}>
             <div className="dropdown-header" onClick={toggleDropdown}>
                 {selectedLabels}
-                <span className="arrow">{isOpen ? "▲" : "▼"}</span>
+                <span className="dropdown-arrow">{isOpen ? "▲" : "▼"}</span>
             </div>
 
             {isOpen && (
-                <ul className="dropdown-list">
+                <ul className="dropdown-options-list">
                     <li
                         key="all"
-                        className={selectedValues.includes("all") ? "selected" : ""}
+                        className={selectedValues.includes("all") ? "option-selected" : ""}
                         onClick={() => handleOptionClick("all")}
                     >
                         All
@@ -71,7 +68,7 @@ const MultiSelectDropdown = ({ options = [], selectedValues, onChange, label }) 
                     {options.map((option) => (
                         <li
                             key={option.id}
-                            className={selectedValues.includes(option.id) ? "selected" : ""}
+                            className={selectedValues.includes(option.id) ? "option-selected" : ""}
                             onClick={() => handleOptionClick(option.id)}
                         >
                             {option.label}
@@ -105,7 +102,6 @@ const TableWithBody = () => {
     const [selectedDate, setSelectedDate] = useState(defaultDate);
     const [dates, setDates] = useState(generateLast8Days());
 
-    // Set default applied filters
     const [appliedFilters, setAppliedFilters] = useState({
         countries: ["c1", "c2", "c3", "c4"],
         ways: ["w1", "w2", "w3", "w4"],
@@ -152,61 +148,47 @@ const TableWithBody = () => {
 
     const generateCombinations = (arr) => {
         let result = [];
-
-        // Generate descending ordered subsets
         for (let i = arr.length; i > 0; i--) {
             result.push(arr.slice(0, i));
         }
-
-        // Ensure single items are explicitly included
         arr.forEach(item => {
             if (!result.some(combo => combo.length === 1 && combo[0] === item)) {
                 result.push([item]);
             }
         });
-
         return result;
     };
 
-
     const generateRows = () => {
         const rows = [];
-
         appliedFilters.countries.forEach((country) => {
             const waysCombinations = generateCombinations(appliedFilters.ways);
-
             waysCombinations.forEach((wayCombo) => {
                 rows.push(
-                    <tr key={`group-${country}-${wayCombo.join("-")}`}>
+                    <tr key={`group-${country}-${wayCombo.join("-")}`} className="table-row">
                         {/* First Table (Country, Ways to Buy, Bag Status) */}
-                        <td colSpan="3" className="mainHeader" >
-                            <table border="1" >
+                        <td colSpan="3" className="table-main-header">
+                            <table border="1" className="table-inner">
                                 <tbody>
                                     {bagStatuses.map((status, index) => (
-                                        <tr key={`${country}-${wayCombo.join("-")}-${status}`}>
-                                            {/* Country spans all bag statuses */}
+                                        <tr key={`${country}-${wayCombo.join("-")}-${status}`} className="table-row-status">
                                             {index === 0 && (
-                                                <td rowSpan={bagStatuses.length} className="bodyHeader" >
+                                                <td rowSpan={bagStatuses.length} className="body-header">
                                                     {country}
                                                 </td>
                                             )}
 
-                                            {/* Ways to Buy spans all bag statuses */}
                                             {index === 0 && (
-                                                <td rowSpan={bagStatuses.length} className="bodyHeader" >
+                                                <td rowSpan={bagStatuses.length} className="body-header">
                                                     {wayCombo.join(", ")}
                                                 </td>
                                             )}
 
-                                            {/* Bag Status */}
-                                            <td className={`bodyHeader ${status === "Total Bags Created" ||
-                                                status === "Total Bags Deleted" ||
-                                                status === "Total Bags Ordered"
-                                                ? "blueHeader"
+                                            <td className={`body-header ${status === "Total Bags Created" || status === "Total Bags Deleted" || status === "Total Bags Ordered"
+                                                ? "blue-header"
                                                 : status === "Open Bags"
-                                                    ? "lightGreenHeader"
-                                                    : ""
-                                                }`}>{status}</td>
+                                                    ? "light-green-header"
+                                                    : ""}`}>{status}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -215,19 +197,16 @@ const TableWithBody = () => {
 
                         {/* Second Table (GBI, AOS, FSI Data for Each Bag Status & Date) */}
                         {filteredDates.map((date) => (
-                            <td colSpan="3" key={`${country}-${wayCombo.join("-")}-${date.id}`}>
-                                <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
+                            <td colSpan="3" key={`${country}-${wayCombo.join("-")}-${date.id}`} className="table-inner-cell">
+                                <table border="1" className="table-inner">
                                     <tbody>
                                         {bagStatuses.map((status, index) => (
                                             <tr key={`${country}-${wayCombo.join("-")}-${status}-data-${date.id}`}
-                                                className={`bodyHeader ${status === "Total Bags Created" ||
-                                                    status === "Total Bags Deleted" ||
-                                                    status === "Total Bags Ordered"
-                                                    ? "blueHeader"
+                                                className={`body-header ${status === "Total Bags Created" || status === "Total Bags Deleted" || status === "Total Bags Ordered"
+                                                    ? "blue-header"
                                                     : status === "Open Bags"
-                                                        ? "lightGreenHeader"
-                                                        : ""
-                                                    }`}
+                                                        ? "light-green-header"
+                                                        : ""}`}
                                             >
                                                 <td>{Math.round(Math.random() * 10000)}</td> {/* GBI */}
                                                 <td>{Math.round(Math.random() * 10000)}</td> {/* AOS */}
@@ -242,19 +221,14 @@ const TableWithBody = () => {
                 );
             });
         });
-
         return rows;
     };
 
-
     return (
-        <div className="container">
-            {/* Filter Header */}
-            <div className="filter-header"
-                style={{ marginBottom: "20px", display: "flex", gap: "10px", whiteSpace: "nowrap" }}
-            >
-                <div className="">
-                    <label htmlFor="">Country</label>
+        <div className="table-container">
+            <div className="filters-header">
+                <div className="filter-item">
+                    <label htmlFor="country-select">Country</label>
                     <MultiSelectDropdown
                         options={filter1Options}
                         selectedValues={selectedCountries}
@@ -263,8 +237,8 @@ const TableWithBody = () => {
                     />
                 </div>
 
-                <div className="">
-                    <label htmlFor="">Ways to Buy</label>
+                <div className="filter-item">
+                    <label htmlFor="ways-select">Ways to Buy</label>
                     <MultiSelectDropdown
                         options={filter2Options}
                         selectedValues={selectedWaysToBuy}
@@ -273,9 +247,9 @@ const TableWithBody = () => {
                     />
                 </div>
 
-                <div className="">
-                    <label htmlFor="">As of Date</label>
-                    <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
+                <div className="filter-item">
+                    <label htmlFor="date-select">As of Date</label>
+                    <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} id="date-select">
                         {dates.map((date) => (
                             <option key={date.id} value={date.id}>
                                 {date.label}
@@ -283,66 +257,60 @@ const TableWithBody = () => {
                         ))}
                     </select>
                 </div>
-                <button onClick={applyFilters}>Apply</button>
+                <button onClick={applyFilters} className="apply-filters-btn">Apply</button>
             </div>
 
-            {/* Table */}
             <div className="table">
-                <table >
+                <table>
                     <thead>
                         <tr>
-                            <th colSpan="3" className="mainHeader" >
-                                <table border="1" >
+                            <th colSpan="3" className="table-main-header">
+                                <table border="1" className="table-inner">
                                     <tbody>
-                                        <tr>
-                                            <td >Country</td>
-                                            <td >Ways to Buy</td>
-                                            <td >As of Date</td>
+                                        <tr >
+                                            <td  >Country</td>
+                                            <td>Ways to Buy</td>
+                                            <td>As of Date</td>
                                         </tr>
                                         <tr>
-                                            <td className="headerHighlight" >{selectedCountries}</td>
-                                            <td className="headerHighlight" >{selectedWaysToBuy}</td>
-                                            <td className="headerHighlight" >{selectedDate}</td>
+                                            <td className="header-highlight">{selectedCountries}</td>
+                                            <td className="header-highlight">{selectedWaysToBuy}</td>
+                                            <td className="header-highlight">{selectedDate}</td>
                                         </tr>
                                         <tr>
-                                            <th className="blueHeader" >Country</th>
-                                            <th className="blueHeader" >ways to buy</th>
-                                            <th className="blueHeader" >Bags Status</th>
+                                            <th className="blue-header">Country</th>
+                                            <th className="blue-header">Ways to Buy</th>
+                                            <th className="blue-header">Bags Status</th>
                                         </tr>
                                     </tbody>
                                 </table>
                             </th>
 
                             {filteredDates.map((date, index) => (
-                                <th key={date.id} colSpan="3" >
-                                    <table border="1" className="tbody" >
+                                <th key={date.id} colSpan="3" className="table-header-date">
+                                    <table border="1" className="table-inner">
                                         <tbody>
                                             <tr>
-                                                <td colSpan="3" >{`Till Day  ${8 - index} (EOD) - ${date.label}`}</td>
+                                                <td colSpan="3">{`Till Day ${8 - index} (EOD) - ${date.label}`}</td>
                                             </tr>
                                             <tr>
-                                                <td colSpan="3" >
+                                                <td colSpan="3">
                                                     {selectedDate} - {date.label}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th className="blueHeader">GBI</th>
-                                                <th className="blueHeader" >AOS</th>
-                                                <th className="blueHeader" >FSI</th>
+                                                <th className="blue-header">GBI</th>
+                                                <th className="blue-header">AOS</th>
+                                                <th className="blue-header">FSI</th>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </th>
                             ))}
                         </tr>
-
                     </thead>
                     <tbody>
-                        {generateRows().map((row) => (
-                            <>
-                                {row}
-                            </>
-                        ))}
+                        {generateRows().map((row) => row)}
                     </tbody>
                 </table>
             </div>
@@ -351,4 +319,3 @@ const TableWithBody = () => {
 };
 
 export default TableWithBody;
-

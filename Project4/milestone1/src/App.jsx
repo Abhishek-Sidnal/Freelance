@@ -1,11 +1,12 @@
 import React from 'react'
 import Table from './components/Table'
-import Table2 from './components/Table2'
+import TableWithBody from './components/Perfect'
+// import Table2 from './components/Table2'
 
 const App = () => {
   return (
     <div>
-      <Table2/>
+      <TableWithBody/>
     </div>
   )
 }
