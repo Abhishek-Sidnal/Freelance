@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './MultiSelectDropdown.scss'
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
 const MultiSelectDropdown = ({ options = [], selectedValues, onChange, label }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +53,7 @@ const MultiSelectDropdown = ({ options = [], selectedValues, onChange, label }) 
         <div className="multi-select-dropdown" ref={dropdownRef}>
             <div className="dropdown-header" onClick={toggleDropdown}>
                 {selectedLabels}
-                <span className="arrow">{isOpen ? "▲" : "▼"}</span>
+                <span className="arrow">{isOpen ? <FaAngleUp/> : <FaAngleDown/>}</span>
             </div>
 
             {isOpen && (

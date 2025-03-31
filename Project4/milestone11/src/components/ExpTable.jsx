@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
+import * as XLSX from 'xlsx';
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import { bagStatuses, filter1Options, filter2Options } from "../data";
 
@@ -30,8 +31,150 @@ const Dtable = () => {
 
     // State to toggle columns
     const [toggleColumn, setToggleColumn] = useState(false);
+    const [isExporting, setIsExporting] = useState(false);
 
     const filteredDates = dates.filter((date) => date.id <= appliedFilters.date);
+
+    // Export to Excel function
+    const exportToExcel = () => {
+        setIsExporting(true);
+        try {
+            // Prepare data for export
+            const exportData = [];
+    
+            // Add multi-row header
+            exportData.push([
+                'Country', 'Ways to Buy', 'As of Date',
+                ...filteredDates.flatMap(() => toggleColumn 
+                    ? ['GBI', '▲(AOS-GBI)', 'AOS', '▲(AOS-FSI)', 'FSI']
+                    : ['GBI', 'AOS', 'FSI']
+                )
+            ]);
+    
+            // Add selected filter information
+            exportData.push([
+                selectedCountries.includes('all') ? 'All' : 
+                    (selectedCountries.length === 1 ? selectedCountries[0] : 'Multiple'),
+                selectedWaysToBuy.includes('all') ? 'All' : 
+                    (selectedWaysToBuy.length === 1 ? selectedWaysToBuy[0] : 'Multiple'),
+                selectedDate,
+                ...filteredDates.flatMap(() => toggleColumn 
+                    ? ['', '', '', '', '']
+                    : ['', '', '']
+                )
+            ]);
+    
+            // Add header row
+            exportData.push([
+                'Country', 'Ways to Buy', 'Bags Status',
+                ...filteredDates.flatMap(date => 
+                    toggleColumn 
+                    ? [`Till Day - ${date.label}`, '', '', '', '']
+                    : [`Till Day - ${date.label}`, '', '']
+                )
+            ]);
+    
+            // Generate data rows
+            const rows = [];
+            const summaryData = {};
+    
+            // Check if multiple countries AND ways selected
+            const isMultipleCountries = appliedFilters.countries.length > 1;
+            const isMultipleWays = appliedFilters.ways.length > 1;
+    
+            // Initialize summary data structure
+            if (isMultipleCountries && isMultipleWays) {
+                filteredDates.forEach((date) => {
+                    summaryData[date.id] = {};
+                    bagStatuses.forEach((status) => {
+                        summaryData[date.id][status] = { GBI: 0, AOS: 0, FSI: 0 };
+                    });
+                });
+            }
+    
+            // Generate detailed data rows
+            appliedFilters.countries.forEach((country) => {
+                appliedFilters.ways.forEach((way) => {
+                    bagStatuses.forEach((status) => {
+                        const rowData = [country, way, status];
+    
+                        // Add data for each date
+                        filteredDates.forEach((date) => {
+                            const GBI = Math.round(Math.random() * 10000);
+                            const AOS = Math.round(Math.random() * 10000);
+                            const FSI = Math.round(Math.random() * 10000);
+    
+                            // Accumulate for summary if multiple countries and ways
+                            if (isMultipleCountries && isMultipleWays) {
+                                summaryData[date.id][status].GBI += GBI;
+                                summaryData[date.id][status].AOS += AOS;
+                                summaryData[date.id][status].FSI += FSI;
+                            }
+    
+                            // Add data for the date
+                            if (toggleColumn) {
+                                const AOS_GBI = AOS - GBI;
+                                const AOS_FSI = AOS - FSI;
+                                rowData.push(GBI, AOS_GBI, AOS, AOS_FSI, FSI);
+                            } else {
+                                rowData.push(GBI, AOS, FSI);
+                            }
+                        });
+    
+                        exportData.push(rowData);
+                    });
+                });
+            });
+    
+            // Add summary row if applicable
+            if (isMultipleCountries && isMultipleWays) {
+                const summaryRow = ['Multiple', 'Multiple', 'Summary'];
+    
+                filteredDates.forEach((date) => {
+                    bagStatuses.forEach((status) => {
+                        const { GBI, AOS, FSI } = summaryData[date.id][status];
+                        
+                        if (toggleColumn) {
+                            const AOS_GBI = AOS - GBI;
+                            const AOS_FSI = AOS - FSI;
+                            summaryRow.push(GBI, AOS_GBI, AOS, AOS_FSI, FSI);
+                        } else {
+                            summaryRow.push(GBI, AOS, FSI);
+                        }
+                    });
+                });
+    
+                exportData.push(summaryRow);
+            }
+    
+            // Create worksheet
+            const worksheet = XLSX.utils.aoa_to_sheet(exportData);
+    
+            // Adjust column widths
+            worksheet['!cols'] = [
+                { wch: 15 },   // Country
+                { wch: 15 },   // Ways to Buy
+                { wch: 20 },   // Bags Status
+                ...filteredDates.flatMap(() => 
+                    toggleColumn 
+                    ? [{ wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }]
+                    : [{ wch: 10 }, { wch: 10 }, { wch: 10 }]
+                )
+            ];
+    
+            // Create workbook and add worksheet
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+    
+            // Generate Excel file
+            XLSX.writeFile(workbook, `Table_Export_${new Date().toISOString().split('T')[0]}.xlsx`);
+        } catch (error) {
+            console.error("Export to Excel failed:", error);
+            alert("Failed to export to Excel. Please try again.");
+        } finally {
+            setIsExporting(false);
+        }
+    };
 
     const applyFilters = () => {
         setAppliedFilters({
@@ -207,7 +350,6 @@ const Dtable = () => {
         return rows;
     }, [appliedFilters, filteredDates, toggleColumn]);
 
-
     const renderSelectionWithTooltip = (selectedItems, type) => {
         if (selectedItems.includes("all")) {
             return <span>All</span>;
@@ -269,8 +411,15 @@ const Dtable = () => {
                     </button>
                 </div>
 
-                <button onClick={applyFilters}>Apply</button>
+                {/* Export Button with Loading State */}
+                <button 
+                    onClick={exportToExcel} 
+                    disabled={isExporting}
+                >
+                    {isExporting ? "Exporting..." : "Export to Excel"}
+                </button>
 
+                <button onClick={applyFilters}>Apply</button>
             </div>
 
             {/* Table */}
