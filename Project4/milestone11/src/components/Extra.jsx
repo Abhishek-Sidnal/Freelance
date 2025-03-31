@@ -6,6 +6,8 @@ import html2pdf from 'html2pdf.js';
 import { PiSwapLight } from "react-icons/pi";
 import { BiExport } from "react-icons/bi";
 import { MdLocalPrintshop } from "react-icons/md";
+import '../Table.scss'
+
 
 // Function to generate last 8 days 
 const generateLast8Days = () => {
@@ -68,34 +70,31 @@ const Dtable = () => {
         appliedFilters.countries.forEach((country) => {
             appliedFilters.ways.forEach((way) => {
                 rows.push(
-                    <tr key={`group-${country}-${way}`}>
-                        <td colSpan="3" className="sticky-header">
-                            <table border="1" className="inner-table" >
+                    <tr key={`group-${country}-${way}`} className="data-group-row">
+                        <td colSpan="3" className="group-cell">
+                            <table border="1" className="inner-table">
                                 <tbody>
                                     {bagStatuses.map((status, index) => (
-                                        <tr key={`${country}-${way}-${status}`}>
+                                        <tr key={`${country}-${way}-${status}`} className="bag-status-row">
                                             {index === 0 && (
-                                                <td rowSpan={bagStatuses.length} className="bodyHeader">
+                                                <td rowSpan={bagStatuses.length} className="country-cell">
                                                     {country}
                                                 </td>
                                             )}
                                             {index === 0 && (
-                                                <td rowSpan={bagStatuses.length} className="bodyHeader">
+                                                <td rowSpan={bagStatuses.length} className="way-cell">
                                                     {way}
                                                 </td>
                                             )}
-                                            <td
-                                                className={`bodyHeader ${status === "Total Bags Created" ||
-                                                    status === "Total Bags Deleted" ||
-                                                    status === "Total Bags Ordered"
-                                                    ? "blueHeader"
-                                                    : status === "Open Bags"
-                                                        ? "lightGreenHeader"
-                                                        : ""
-                                                    }`}
-                                            >
-                                                {status}
-                                            </td>
+                                            <td className={`bodyHeader ${status === "Total Bags Created" ||
+                                                status === "Total Bags Deleted" ||
+                                                status === "Total Bags Ordered"
+                                                ? "blue-header"
+                                                : status === "Open Bags"
+                                                    ? "lightGreenHeader"
+                                                    : ""
+                                                }`}
+                                            >{status}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -103,8 +102,8 @@ const Dtable = () => {
                         </td>
 
                         {filteredDates.map((date) => (
-                            <td colSpan="3" key={`${country}-${way}-${date.id}`}  >
-                                <table border="1" className="inner-table" >
+                            <td colSpan="3" key={`${country}-${way}-${date.id}`} className="date-data-cell">
+                                <table border="1" className="inner-table">
                                     <tbody>
                                         {bagStatuses.map((status) => {
                                             const GBI = Math.round(Math.random() * 10000);
@@ -122,22 +121,21 @@ const Dtable = () => {
                                             }
 
                                             return (
-                                                <tr
-                                                    key={`${country}-${way}-${status}-data-${date.id}`}
+                                                <tr key={`${country}-${way}-${status}-data-${date.id}`}
                                                     className={`bodyHeader ${status === "Total Bags Created" ||
                                                         status === "Total Bags Deleted" ||
                                                         status === "Total Bags Ordered"
-                                                        ? "blueHeader"
+                                                        ? "blue-header"
                                                         : status === "Open Bags"
                                                             ? "lightGreenHeader"
                                                             : ""
                                                         }`}
                                                 >
-                                                    <td>{GBI}</td>
-                                                    {toggleColumn && <td>{AOS_GBI}</td>}
-                                                    <td>{AOS}</td>
-                                                    {toggleColumn && <td>{AOS_FSI}</td>}
-                                                    <td>{FSI}</td>
+                                                    <td className="gbi-cell">{GBI}</td>
+                                                    {toggleColumn && <td className="aos-gbi-cell">{AOS_GBI}</td>}
+                                                    <td className="aos-cell">{AOS}</td>
+                                                    {toggleColumn && <td className="aos-fsi-cell">{AOS_FSI}</td>}
+                                                    <td className="fsi-cell">{FSI}</td>
                                                 </tr>
                                             );
                                         })}
@@ -145,7 +143,6 @@ const Dtable = () => {
                                 </table>
                             </td>
                         ))}
-
                     </tr>
                 );
             });
@@ -154,33 +151,39 @@ const Dtable = () => {
         // Insert summary row at the top
         if (isMultipleCountries && isMultipleWays) {
             const summaryRow = (
-                <tr key="summary-row">
-                    <td colSpan="3" className="sticky-header">
-                        <table border="1" className="inner-table" >
+                <tr key="summary-row" className="summary-row">
+                    <td colSpan="3" className="summary-cell">
+                        <table border="1" className="inner-table">
                             <tbody>
                                 {bagStatuses.map((status, index) => (
-                                    <tr key={`summary-${status}`}>
+                                    <tr key={`summary-${status}`} className="summary-status-row">
                                         {index === 0 && (
-                                            <td rowSpan={bagStatuses.length} className="bodyHeader">
+                                            <td rowSpan={bagStatuses.length} className="summary-country-cell">
                                                 Multiple
                                             </td>
                                         )}
                                         {index === 0 && (
-                                            <td rowSpan={bagStatuses.length} className="bodyHeader">
+                                            <td rowSpan={bagStatuses.length} className="summary-way-cell">
                                                 Multiple
                                             </td>
                                         )}
-                                        <td className={`bodyHeader ${status.includes("Total") ? "blueHeader" : status === "Open Bags" ? "lightGreenHeader" : ""}`} >
-                                            {status}
-                                        </td>
+                                        <td className={`bodyHeader ${status === "Total Bags Created" ||
+                                            status === "Total Bags Deleted" ||
+                                            status === "Total Bags Ordered"
+                                            ? "blue-header"
+                                            : status === "Open Bags"
+                                                ? "lightGreenHeader"
+                                                : ""
+                                            }`}
+                                        >{status}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </td>
                     {filteredDates.map((date) => (
-                        <td colSpan="3" key={`summary-data-${date.id}`} className="" >
-                            <table border="1" className="inner-table" >
+                        <td colSpan="3" key={`summary-data-${date.id}`} className="summary-date-cell">
+                            <table border="1" className="inner-table">
                                 <tbody>
                                     {bagStatuses.map((status) => {
                                         const { GBI, AOS, FSI } = summaryData[date.id][status];
@@ -188,15 +191,21 @@ const Dtable = () => {
                                         const AOS_FSI = toggleColumn ? AOS - FSI : null;
 
                                         return (
-                                            <tr
-                                                key={`summary-${status}-${date.id}`}
-                                                className={`bodyHeader ${status.includes("Total") ? "blueHeader" : status === "Open Bags" ? "lightGreenHeader" : ""}`}
+                                            <tr key={`summary-${status}-${date.id}`}
+                                                className={`bodyHeader ${status === "Total Bags Created" ||
+                                                    status === "Total Bags Deleted" ||
+                                                    status === "Total Bags Ordered"
+                                                    ? "blue-header"
+                                                    : status === "Open Bags"
+                                                        ? "lightGreenHeader"
+                                                        : ""
+                                                    }`}
                                             >
-                                                <td>{GBI}</td>
-                                                {toggleColumn && <td>{AOS_GBI}</td>}
-                                                <td>{AOS}</td>
-                                                {toggleColumn && <td>{AOS_FSI}</td>}
-                                                <td>{FSI}</td>
+                                                <td className="summary-gbi-cell">{GBI}</td>
+                                                {toggleColumn && <td className="summary-aos-gbi-cell">{AOS_GBI}</td>}
+                                                <td className="summary-aos-cell">{AOS}</td>
+                                                {toggleColumn && <td className="summary-aos-fsi-cell">{AOS_FSI}</td>}
+                                                <td className="summary-fsi-cell">{FSI}</td>
                                             </tr>
                                         );
                                     })}
@@ -213,6 +222,7 @@ const Dtable = () => {
 
         return rows;
     }, [appliedFilters, filteredDates, toggleColumn]);
+
 
     const renderSelectionWithTooltip = (selectedItems, type) => {
         if (selectedItems.includes("all")) {
@@ -403,7 +413,7 @@ const Dtable = () => {
 
     const printTable = () => {
         const printWindow = window.open("", "_blank");
-    
+
         // Grab the current styles from the document
         const styles = Array.from(document.styleSheets)
             .map(sheet => {
@@ -416,7 +426,7 @@ const Dtable = () => {
                 }
             })
             .join("\n");
-    
+
         // Write the HTML content into the new print window
         printWindow.document.write("<html><head><title>Print Table</title>");
         printWindow.document.write("<style>" + styles + "</style>"); // Embed the styles
@@ -424,13 +434,13 @@ const Dtable = () => {
         printWindow.document.write(tableRef.current.outerHTML); // Insert the table content
         printWindow.document.write("</body></html>");
         printWindow.document.close();
-    
+
         // Wait for the document to be fully loaded before printing
         printWindow.onload = () => {
             printWindow.print(); // Trigger the print dialog
         };
     };
-    
+
 
     return (
         <div className="container">
@@ -470,9 +480,9 @@ const Dtable = () => {
                 <button onClick={applyFilters}>Apply</button>
 
 
-                <div className="export">
+                <div className="btn-group">
                     <button onClick={() => setToggleColumn(!toggleColumn)}
-                        className={`${toggleColumn ? "active-Toggle" : ""} btn`}
+                        className={`btn ${toggleColumn ? "active-toggle" : ""} `}
                     >
                         <PiSwapLight />
                     </button>
@@ -484,61 +494,52 @@ const Dtable = () => {
             </div>
 
             {/* Table */}
-            <div className="table-container" ref={tableRef}>
+            <div ref={tableRef} className="table-container">
                 <table className="main-table">
-                    <thead>
-                        <tr>
-                            <th colSpan="3" className="table-header sticky-header" id="table-header" style={{ width: "100%", maxWidth: "400px" }} >
-                                <table border="1" className="inner-table" >
+                    <thead className="main-table-header">
+                        <tr className="header-row">
+                            <th colSpan="3" className="table-header">
+                                <table border="1" className="inner-table">
                                     <thead>
-                                        <tr>
+                                        <tr className="column-header">
                                             <th>Country</th>
                                             <th>Ways to Buy</th>
                                             <th>As of Date</th>
                                         </tr>
-                                        <tr>
-                                            <th className="headerHighlight">
-                                                {renderSelectionWithTooltip(selectedCountries, "Country")}
-                                            </th>
-                                            <th className="headerHighlight">
-                                                {renderSelectionWithTooltip(selectedWaysToBuy, "Ways to Buy")}
-                                            </th>
-                                            <th className="headerHighlight">{selectedDate}</th>
+                                        <tr className="filter-row">
+                                            <th>{renderSelectionWithTooltip(selectedCountries, "Country")}</th>
+                                            <th>{renderSelectionWithTooltip(selectedWaysToBuy, "Ways to Buy")}</th>
+                                            <th>{selectedDate}</th>
                                         </tr>
-
-                                        <tr>
-                                            <th className="blueHeader">Country</th>
-                                            <th className="blueHeader">Ways to Buy</th>
-                                            <th className="blueHeader">Bags Status</th>
+                                        <tr className="blue-header">
+                                            <th>Country</th>
+                                            <th>Ways to Buy</th>
+                                            <th>Bags Status</th>
                                         </tr>
                                     </thead>
                                 </table>
                             </th>
 
                             {filteredDates.map((date, index) => (
-                                <th key={date.id} colSpan="3" className="table-header EOD-Header" >
+                                <th key={date.id} colSpan="3" className="date-header">
                                     <table border="1" className="inner-table">
                                         <thead>
-                                            <tr>
-                                                <th colSpan={toggleColumn ? "5" : "3"} >{`Till Day  ${8 - index} (EOD) - ${date.label}`}</th>
+                                            <tr className="date-row">
+                                                <th colSpan={toggleColumn ? "5" : "3"}>
+                                                    {`Till Day ${8 - index} (EOD) - ${date.label}`}
+                                                </th>
                                             </tr>
-                                            <tr>
-                                                <th colSpan={toggleColumn ? "5" : "3"}>{selectedDate} - {date.label}</th>
+                                            <tr className="date-row">
+                                                <th colSpan={toggleColumn ? "5" : "3"}>
+                                                    {selectedDate} - {date.label}
+                                                </th>
                                             </tr>
-                                            <tr>
-                                                <th className="blueHeader">GBI</th>
-
-                                                {toggleColumn && (
-                                                    <th className="blueHeader">▲(AOS-GBI)</th>
-                                                )}
-
-                                                <th className="blueHeader">AOS</th>
-
-                                                {toggleColumn && (
-                                                    <th className="blueHeader">▲(AOS-FSI)</th>
-                                                )}
-
-                                                <th className="blueHeader">FSI</th>
+                                            <tr className="metrics-header blue-header ">
+                                                <th>GBI</th>
+                                                {toggleColumn && <th>▲(AOS-GBI)</th>}
+                                                <th>AOS</th>
+                                                {toggleColumn && <th>▲(AOS-FSI)</th>}
+                                                <th>FSI</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -547,14 +548,16 @@ const Dtable = () => {
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody className="table-body">
                         {generateRows}
                     </tbody>
                 </table>
             </div>
+
         </div>
     );
 };
+
 
 
 export default Dtable;

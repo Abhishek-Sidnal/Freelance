@@ -1,0 +1,139 @@
+.filter-header {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    gap: 10px;
+    white-space: nowrap;
+
+    .filter {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #fff;
+        }
+    }
+}
+
+
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+
+    .main-table {
+        border-collapse: collapse;
+        table-layout: auto;
+
+        .summary-cell,
+        .group-cell,
+        .table-header {
+            position: sticky;
+            left: 0;
+            z-index: 100;
+            display: block;
+            padding: 3px;
+            width: 450px;
+            max-width: 450px;
+            min-width: 400px;
+            background-color: #fff;
+
+            td {
+                width: 33%;
+            }
+        }
+
+        .main-table-header {
+            width: 100%;
+
+            .header-row {
+                width: 100%;
+                position: relative;
+
+
+            }
+
+
+            .filter-row {
+                background-color: #d1d13d;
+            }
+
+            .date-header {
+                background-color: #f9f9f9;
+                text-align: center;
+                width: 450px;
+                max-width: 450px;
+                min-width: 400px;
+                padding: 3px;
+
+            }
+        }
+
+        .table-body {
+            tr {
+                td {
+                    padding: 3px;
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.inner-table {
+    width: 100%;
+    white-space: nowrap;
+
+    td,
+    th {
+        width: 20%;
+        min-width: 130px;
+    }
+}
+
+.blue-header {
+    background-color: skyblue;
+}
+
+.lightGreenHeader {
+    background-color: lightgreen;
+}
+
+
+
+button {
+    background-color: #18b7f7;
+    border: none;
+    padding: 10px;
+    color: white;
+}
+.btn-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+
+    .btn {
+        border-radius: 50%;
+        padding: 4px;
+        height: 30px;
+        width: 30px;
+        background-color: rgb(141, 138, 138);
+        color: white;
+        border: none;
+    }
+
+
+    .active-toggle {
+        background-color: #7bc0f8;
+    }
+}
+
