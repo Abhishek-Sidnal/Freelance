@@ -27,3 +27,24 @@ export const bagStatuses = [
     "Total Bags Ordered",
     "Open Bags",
 ];
+
+
+export const generateLast8Days = () => {
+    const dates = [];
+    for (let i = 0; i < 8; i++) {
+        let date = new Date();
+        date.setDate(date.getDate() - i);
+        
+        let formattedDate = date.toLocaleDateString("en-US", {
+            month: "2-digit",
+            day: "2-digit",
+            year: "numeric",
+        });
+
+        dates.push({
+            id: formattedDate,
+            label: formattedDate,
+        });
+    }
+    return dates;
+};

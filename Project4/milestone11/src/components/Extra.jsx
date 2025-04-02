@@ -1,27 +1,12 @@
 import React, { useState, useMemo, useRef } from "react";
 import MultiSelectDropdown from "./MultiSelectDropdown";
-import { bagStatuses, filter1Options, filter2Options } from "../data";
+import { bagStatuses, filter1Options, filter2Options, generateLast8Days } from "../data";
 import * as XLSX from "xlsx";
 import html2pdf from 'html2pdf.js';
 import { PiSwapLight } from "react-icons/pi";
 import { BiExport } from "react-icons/bi";
 import { MdLocalPrintshop } from "react-icons/md";
-import '../Table.scss'
-
-
-// Function to generate last 8 days 
-const generateLast8Days = () => {
-    const dates = [];
-    for (let i = 0; i < 8; i++) {
-        let date = new Date();
-        date.setDate(date.getDate() - i);
-        dates.push({
-            id: date.toISOString().split("T")[0],
-            label: date.toLocaleDateString("en-US"),
-        });
-    }
-    return dates;
-};
+import { LuTriangle } from "react-icons/lu";
 
 const Dtable = () => {
     const tableRef = useRef(null);
@@ -31,8 +16,8 @@ const Dtable = () => {
     const [selectedDate, setSelectedDate] = useState(defaultDate);
     const [dates, setDates] = useState(generateLast8Days());
     const [appliedFilters, setAppliedFilters] = useState({
-        countries: ["c1", "c2", "c3", "c4"],
-        ways: ["w1", "w2", "w3", "w4"],
+        countries: filter1Options.map(country => country.label),
+        ways: filter1Options.map(wob => wob.label),
         date: defaultDate,
     });
 
@@ -43,8 +28,8 @@ const Dtable = () => {
 
     const applyFilters = () => {
         setAppliedFilters({
-            countries: selectedCountries.includes("all") ? ["c1", "c2", "c3", "c4"] : selectedCountries,
-            ways: selectedWaysToBuy.includes("all") ? ["w1", "w2", "w3", "w4"] : selectedWaysToBuy,
+            countries: selectedCountries.includes("all") ? filter1Options.map(country => country.label) : selectedCountries,
+            ways: selectedWaysToBuy.includes("all") ? filter1Options.map(wob => wob.label) : selectedWaysToBuy,
             date: selectedDate,
         });
     };
@@ -102,7 +87,7 @@ const Dtable = () => {
                         </td>
 
                         {filteredDates.map((date) => (
-                            <td colSpan="3" key={`${country}-${way}-${date.id}`} className="date-data-cell">
+                            <td colSpan="3" key={`${country}-${way}-${date.id}`} className="summary-date-cell">
                                 <table border="1" className="inner-table">
                                     <tbody>
                                         {bagStatuses.map((status) => {
@@ -158,7 +143,7 @@ const Dtable = () => {
                                 {bagStatuses.map((status, index) => (
                                     <tr key={`summary-${status}`} className="summary-status-row">
                                         {index === 0 && (
-                                            <td rowSpan={bagStatuses.length} className="summary-country-cell">
+                                            <td rowSpan={bagStatuses.length} className="country-cell">
                                                 Multiple
                                             </td>
                                         )}
@@ -231,16 +216,26 @@ const Dtable = () => {
         if (selectedItems.length === 1) {
             return <span>{selectedItems[0]}</span>;
         }
+        if (selectedItems.length === 0) {
+            return <span>
+                {`{Select Ways to Buy}`}
+            </span>;
+        }
         return (
-            <span
-                className="multiple-selection"
-                data-tooltip={selectedItems.join(", ")} // This is the tooltip content
-                style={{ position: "relative", cursor: "pointer" }}
+            <div
+                className="tooltip"
             >
-                Multiple
-            </span>
+                {`{Multiple}`}
+                <ul className="bottom" >
+                    {selectedItems.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
+                    <i></i>
+                </ul>
+            </div>
         );
     };
+
 
     const exportToExcel = () => {
         // Prepare the data for export
@@ -441,7 +436,6 @@ const Dtable = () => {
         };
     };
 
-
     return (
         <div className="container">
             {/* Filter  */}
@@ -490,6 +484,7 @@ const Dtable = () => {
                         className="btn"
                     > <BiExport /> </button>
                     <button onClick={printTable} className="btn"> <MdLocalPrintshop />  </button>
+
                 </div>
             </div>
 
@@ -499,7 +494,7 @@ const Dtable = () => {
                     <thead className="main-table-header">
                         <tr className="header-row">
                             <th colSpan="3" className="table-header">
-                                <table border="1" className="inner-table">
+                                <table border="1" className="inner-table sticky ">
                                     <thead>
                                         <tr className="column-header">
                                             <th>Country</th>
@@ -511,7 +506,7 @@ const Dtable = () => {
                                             <th>{renderSelectionWithTooltip(selectedWaysToBuy, "Ways to Buy")}</th>
                                             <th>{selectedDate}</th>
                                         </tr>
-                                        <tr className="blue-header">
+                                        <tr className="sub-header">
                                             <th>Country</th>
                                             <th>Ways to Buy</th>
                                             <th>Bags Status</th>
@@ -526,7 +521,7 @@ const Dtable = () => {
                                         <thead>
                                             <tr className="date-row">
                                                 <th colSpan={toggleColumn ? "5" : "3"}>
-                                                    {`Till Day ${8 - index} (EOD) - ${date.label}`}
+                                                    {`Till Day ${8 - index} (EOD)`}
                                                 </th>
                                             </tr>
                                             <tr className="date-row">
@@ -534,11 +529,11 @@ const Dtable = () => {
                                                     {selectedDate} - {date.label}
                                                 </th>
                                             </tr>
-                                            <tr className="metrics-header blue-header ">
+                                            <tr className="metrics-header sub-header ">
                                                 <th>GBI</th>
-                                                {toggleColumn && <th>▲(AOS-GBI)</th>}
+                                                {toggleColumn && <th className="delta-header" > <LuTriangle />  (AOS-GBI)</th>}
                                                 <th>AOS</th>
-                                                {toggleColumn && <th>▲(AOS-FSI)</th>}
+                                                {toggleColumn && <th className="delta-header"><LuTriangle /> (AOS-FSI)</th>}
                                                 <th>FSI</th>
                                             </tr>
                                         </thead>
@@ -557,7 +552,5 @@ const Dtable = () => {
         </div>
     );
 };
-
-
 
 export default Dtable;
