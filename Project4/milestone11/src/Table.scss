@@ -25,11 +25,7 @@
         flex-direction: column;
         gap: 10px;
 
-        select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            width: 150px;
-        }
+
     }
 
     button {
@@ -68,17 +64,11 @@
 .table-container {
     width: 100%;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
 
     .main-table {
         border-collapse: collapse;
+        table-layout: auto;
         table-layout: fixed;
-        transform: translateZ(0);
-
-        thead {
-            display: table-header-group;
-        }
 
         .summary-row {
             background-color: #fcfaf3;
@@ -110,6 +100,7 @@
                 position: sticky;
                 left: 0;
                 z-index: 20;
+                display: block;
                 padding: 3px;
                 width: 450px;
                 max-width: 450px;
@@ -283,4 +274,12 @@
             display: block;
         }
     }
+}
+
+
+
+select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 150px;
 }
