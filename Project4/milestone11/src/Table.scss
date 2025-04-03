@@ -286,5 +286,10 @@
     padding: 10px;
     border: 1px solid #ccc;
     width: 150px;
-    background-color: yellow;
+    // background-color: yellow;
+
+    &:active {
+        border: 1px solid #ccc;
+
+    }
 }
