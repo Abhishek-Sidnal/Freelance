@@ -2,6 +2,8 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: 'none';
 }
 
 .container {
@@ -283,10 +285,15 @@
 
 
 .select {
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ccc;
     width: 150px;
+    appearance: none;
+    -webkit-appearance: 'none'; // Safari-specific appearance reset
+    -moz-appearance: 'none';
     // background-color: yellow;
+    background-color: #fff;
+    border-radius: 5px;
 
     &:active {
         border: 1px solid #ccc;

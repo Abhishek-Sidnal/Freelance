@@ -461,12 +461,9 @@ const Dtable = () => {
                     <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="select"
                         style={{
                             padding: '10px',
-                            border: '1px solid #ccc',
                             width: '150px',
                             fontSize: '14px',
-                            appearance: 'none',       // Remove default dropdown styling
-                            WebkitAppearance: 'none', // Safari-specific appearance reset
-                            MozAppearance: 'none',    // Firefox-specific appearance reset
+                            appearance: 'none',
                         }}
                     >
                         {dates.map((date) => (
