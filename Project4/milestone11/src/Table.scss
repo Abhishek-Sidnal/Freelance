@@ -99,10 +99,10 @@
             .summary-cell,
             .group-cell,
             .table-header {
-                position: --webkit-sticky;
+                position: -webkit-sticky;
                 position: sticky;
                 left: 0;
-                z-index: 2;
+                z-index: 20;
                 display: block;
                 padding: 3px;
                 width: 450px;
@@ -146,7 +146,7 @@
                 padding: 3px;
             }
 
-             .column-header {
+            .column-header {
                 th {
                     font-weight: bold;
                 }
@@ -277,4 +277,13 @@
             display: block;
         }
     }
+}
+
+.main-table .header-row,
+.main-table .summary-row {
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 10;
+    /* Ensure it's above the table content */
+    background-color: white;
 }
