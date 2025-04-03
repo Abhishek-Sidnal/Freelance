@@ -10,11 +10,13 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+Extra
 *.local
 
 Proj4Mileston1.zip
+C:\Users\admin\Desktop\Freelance\Project4\Proj4Mileston1.1
 
-C:\Users\admin\Desktop\Freelance\Project4\Proj4Mileston1.zip
+Proj4Mileston1.zip
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

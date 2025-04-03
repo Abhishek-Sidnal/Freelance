@@ -6,33 +6,26 @@ const MultiSelectDropdown = ({ options = [], selectedValues = [], onChange, labe
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Toggle dropdown visibility
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
-  // Handle selection logic
   const handleOptionClick = (id) => {
     let updatedSelection;
 
     if (id === 'all') {
-      // If "All" is selected, select all options and remove individual selections
       updatedSelection = selectedValues.includes('all') ? [] : ['all'];
     } else {
-      // If an individual option is clicked, toggle its selection
       if (selectedValues.includes(id)) {
-        updatedSelection = selectedValues.filter((item) => item !== id); // Deselect item
+        updatedSelection = selectedValues.filter((item) => item !== id);
       } else {
-        updatedSelection = [...selectedValues, id]; // Select item
+        updatedSelection = [...selectedValues, id];
       }
 
-      // If any option is selected, deselect "All"
       updatedSelection = updatedSelection.filter((item) => item !== 'all');
     }
 
-    // Pass the updated selection to the parent component
     onChange(updatedSelection);
   };
 
-  // Handle clicks outside the dropdown to close it
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
@@ -40,14 +33,12 @@ const MultiSelectDropdown = ({ options = [], selectedValues = [], onChange, labe
   };
 
   useEffect(() => {
-    // Add event listener for clicks outside
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
-  // Memoizing the selected labels
   const selectedLabels = React.useMemo(() => {
     if (selectedValues.includes('all')) {
       return 'All';
@@ -64,7 +55,6 @@ const MultiSelectDropdown = ({ options = [], selectedValues = [], onChange, labe
 
       {isOpen && (
         <ul className="dropdown-list">
-          {/* "All" option */}
           <li
             key="all"
             className={selectedValues.includes('all') ? 'selected' : ''}
@@ -72,7 +62,6 @@ const MultiSelectDropdown = ({ options = [], selectedValues = [], onChange, labe
           >
             All
           </li>
-          {/* Individual options */}
           {options.map((option) => (
             <li
               key={option.id}

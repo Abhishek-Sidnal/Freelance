@@ -224,15 +224,11 @@
 
 
 
-// tooltio
+// tooltip
 .tooltip {
     display: inline-block;
     position: relative;
     text-align: left;
-
-    h3 {
-        margin: 12px 0;
-    }
 
     .bottom {
         width: 150px;
@@ -287,16 +283,15 @@
 .select {
     padding: 6px;
     border: 1px solid #ccc;
+    color: #121212;
     width: 150px;
-    appearance: none;
-    -webkit-appearance: 'none'; // Safari-specific appearance reset
-    -moz-appearance: 'none';
-    // background-color: yellow;
     background-color: #fff;
     border-radius: 5px;
+    appearance: none;
+    -webkit-appearance: 'none';
+    -moz-appearance: 'none';
 
     &:active {
         border: 1px solid #ccc;
-
     }
 }

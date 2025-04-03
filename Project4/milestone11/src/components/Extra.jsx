@@ -41,7 +41,7 @@ const Dtable = () => {
         const isMultipleCountries = appliedFilters.countries.length > 1;
         const isMultipleWays = appliedFilters.ways.length > 1;
 
-        // Initialize summary data structure if necessary for multiple countries and ways
+        // Initialize summary data structure for multiple countries and ways
         if ((isMultipleCountries && !isMultipleWays) || (!isMultipleCountries && isMultipleWays) || (isMultipleCountries && isMultipleWays)) {
             filteredDates.forEach((date) => {
                 summaryData[date.id] = {};
@@ -51,7 +51,7 @@ const Dtable = () => {
             });
         }
 
-        // Generating rows for each combination of country and way
+        // Generating rows each combination of country and way
         appliedFilters.countries.forEach((country) => {
             appliedFilters.ways.forEach((way) => {
                 rows.push(
@@ -130,7 +130,7 @@ const Dtable = () => {
             });
         });
 
-        // Summary Row: Add the summary row at the top if multiple countries and/or ways are selected
+        // multiple row
         if ((isMultipleCountries && !isMultipleWays) || (!isMultipleCountries && isMultipleWays) || (isMultipleCountries && isMultipleWays)) {
             const summaryRow = (
                 <tr key="summary-row" className="summary-row">
@@ -196,7 +196,6 @@ const Dtable = () => {
                 </tr>
             );
 
-            // Insert the summary row at the start of rows
             rows.unshift(summaryRow);
         }
 
@@ -380,27 +379,27 @@ const Dtable = () => {
         XLSX.writeFile(wb, "table-data.xlsx");
     };
 
+    // {direct pdf option}
+    // const exportToPDF = () => {
+    //     const element = tableRef.current;
+    //     const opt = {
+    //         margin: 1,
+    //         filename: 'table-data.pdf',
+    //         image: { type: 'jpeg', quality: 0.98 },
+    //         html2canvas: {
+    //             scale: 2,
+    //             logging: true,
+    //             letterRendering: true
+    //         },
+    //         jsPDF: {
+    //             unit: 'mm',
+    //             format: 'a2',
+    //             orientation: 'landscape'
+    //         }
+    //     };
 
-    const exportToPDF = () => {
-        const element = tableRef.current;
-        const opt = {
-            margin: 1,
-            filename: 'table-data.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: {
-                scale: 2,
-                logging: true,
-                letterRendering: true
-            },
-            jsPDF: {
-                unit: 'mm',
-                format: 'a2',
-                orientation: 'landscape'
-            }
-        };
-
-        html2pdf().set(opt).from(element).save();
-    };
+    //     html2pdf().set(opt).from(element).save();
+    // };
 
     const printTable = () => {
         const printWindow = window.open("", "_blank");
