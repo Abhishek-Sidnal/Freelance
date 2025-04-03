@@ -9,7 +9,7 @@
     font-size: 14px;
 }
 
-// Filters Section
+
 .filter-header {
     display: flex;
     align-items: flex-end;
@@ -18,6 +18,7 @@
     white-space: nowrap;
     background-color: #f4f6f8;
     padding: 20px;
+
 
     .filter {
         display: flex;
@@ -64,18 +65,16 @@
     }
 }
 
-// Table Container
 .table-container {
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    max-height: 500px; // Fixed height for scroll
-    overflow-y: auto;
+    width: 100%;
 
     .main-table {
-        width: 100%;
         border-collapse: collapse;
         table-layout: fixed;
+        transform: translateZ(0);
 
         thead {
             display: table-header-group;
@@ -91,6 +90,12 @@
 
         .country-cell {
             text-align: center;
+        }
+
+
+        .main-table-header,
+        .table-body {
+            position: relative;
         }
 
         .header-row,
@@ -124,6 +129,7 @@
                 th {
                     font-weight: bold;
                 }
+
             }
         }
 
@@ -157,6 +163,7 @@
             tr {
                 td {
                     padding: 3px;
+
                     .inner-table {
                         td {
                             padding: 8px;
@@ -166,6 +173,7 @@
             }
         }
     }
+
 
     table {
         border-collapse: collapse;
@@ -178,6 +186,7 @@
 
         th {
             font-weight: 500;
+
         }
 
         td,
@@ -188,6 +197,8 @@
         }
     }
 
+
+    // Highlighter
     .sub-header {
         background-color: #0076ba;
         color: #fff;
@@ -212,7 +223,10 @@
     }
 }
 
-// Tooltip
+
+
+
+// tooltio
 .tooltip {
     display: inline-block;
     position: relative;
@@ -237,6 +251,7 @@
         z-index: 99999999;
         box-sizing: border-box;
         display: none;
+
 
         li {
             margin-left: 10px;
