@@ -463,7 +463,7 @@ const Dtable = () => {
                             padding: '10px',
                             border: '1px solid #ccc',
                             width: '150px',
-                            backgroundColor: 'yellow',
+                            fontSize: '14px',
                             appearance: 'none',       // Remove default dropdown styling
                             WebkitAppearance: 'none', // Safari-specific appearance reset
                             MozAppearance: 'none',    // Firefox-specific appearance reset
