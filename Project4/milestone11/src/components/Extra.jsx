@@ -7,7 +7,7 @@ import { PiSwapLight } from "react-icons/pi";
 import { BiExport } from "react-icons/bi";
 import { MdLocalPrintshop } from "react-icons/md";
 import { LuTriangle } from "react-icons/lu";
-import Stick from "./Stick"
+
 const Dtable = () => {
     const tableRef = useRef(null);
     const defaultDate = generateLast8Days()[0].id;
@@ -37,10 +37,10 @@ const Dtable = () => {
     const generateRows = useMemo(() => {
         const rows = [];
         const summaryData = {};
-    
+
         const isMultipleCountries = appliedFilters.countries.length > 1;
         const isMultipleWays = appliedFilters.ways.length > 1;
-    
+
         // Initialize summary data structure if necessary for multiple countries and ways
         if ((isMultipleCountries && !isMultipleWays) || (!isMultipleCountries && isMultipleWays) || (isMultipleCountries && isMultipleWays)) {
             filteredDates.forEach((date) => {
@@ -50,7 +50,7 @@ const Dtable = () => {
                 });
             });
         }
-    
+
         // Generating rows for each combination of country and way
         appliedFilters.countries.forEach((country) => {
             appliedFilters.ways.forEach((way) => {
@@ -84,7 +84,7 @@ const Dtable = () => {
                                 </tbody>
                             </table>
                         </td>
-    
+
                         {filteredDates.map((date) => (
                             <td colSpan="3" key={`${country}-${way}-${date.id}`} className="summary-date-cell">
                                 <table border="1" className="inner-table">
@@ -95,14 +95,14 @@ const Dtable = () => {
                                             const FSI = Math.round(Math.random() * 10000);
                                             const AOS_GBI = toggleColumn ? AOS - GBI : null;
                                             const AOS_FSI = toggleColumn ? AOS - FSI : null;
-    
+
                                             // Accumulate for summary
                                             if ((isMultipleCountries && !isMultipleWays) || (!isMultipleCountries && isMultipleWays) || (isMultipleCountries && isMultipleWays)) {
                                                 summaryData[date.id][status].GBI += GBI;
                                                 summaryData[date.id][status].AOS += AOS;
                                                 summaryData[date.id][status].FSI += FSI;
                                             }
-    
+
                                             return (
                                                 <tr key={`${country}-${way}-${status}-data-${date.id}`}
                                                     className={`bodyHeader ${status === "Total Bags Created" ||
@@ -112,7 +112,7 @@ const Dtable = () => {
                                                         : status === "Open Bags"
                                                             ? "lightGreenHeader"
                                                             : ""
-                                                    }`}>
+                                                        }`}>
                                                     <td className="gbi-cell">{GBI}</td>
                                                     {toggleColumn && <td className="aos-gbi-cell">{AOS_GBI}</td>}
                                                     <td className="aos-cell">{AOS}</td>
@@ -129,7 +129,7 @@ const Dtable = () => {
                 );
             });
         });
-    
+
         // Summary Row: Add the summary row at the top if multiple countries and/or ways are selected
         if ((isMultipleCountries && !isMultipleWays) || (!isMultipleCountries && isMultipleWays) || (isMultipleCountries && isMultipleWays)) {
             const summaryRow = (
@@ -156,7 +156,7 @@ const Dtable = () => {
                                             : status === "Open Bags"
                                                 ? "lightGreenHeader"
                                                 : ""
-                                        }`}>{status}</td>
+                                            }`}>{status}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -170,7 +170,7 @@ const Dtable = () => {
                                         const { GBI, AOS, FSI } = summaryData[date.id][status];
                                         const AOS_GBI = toggleColumn ? AOS - GBI : null;
                                         const AOS_FSI = toggleColumn ? AOS - FSI : null;
-    
+
                                         return (
                                             <tr key={`summary-${status}-${date.id}`}
                                                 className={`bodyHeader ${status === "Total Bags Created" ||
@@ -180,7 +180,7 @@ const Dtable = () => {
                                                     : status === "Open Bags"
                                                         ? "lightGreenHeader"
                                                         : ""
-                                                }`}>
+                                                    }`}>
                                                 <td className="summary-gbi-cell">{GBI}</td>
                                                 {toggleColumn && <td className="summary-aos-gbi-cell">{AOS_GBI}</td>}
                                                 <td className="summary-aos-cell">{AOS}</td>
@@ -195,14 +195,14 @@ const Dtable = () => {
                     ))}
                 </tr>
             );
-    
+
             // Insert the summary row at the start of rows
             rows.unshift(summaryRow);
         }
-    
+
         return rows;
     }, [appliedFilters, filteredDates, toggleColumn]);
-    
+
 
 
     const renderSelectionWithTooltip = (selectedItems, type) => {
@@ -434,10 +434,6 @@ const Dtable = () => {
 
     return (
         <div className="container">
-
-
-<Stick/>
-
             {/* Filter  */}
             <div className="filter-header">
                 <div className="filter">
