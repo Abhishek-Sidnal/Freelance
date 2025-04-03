@@ -52,7 +52,7 @@ const MultiSelectDropdown = ({ options = [], selectedValues = [], onChange, labe
     if (selectedValues.includes('all')) {
       return 'All';
     }
-    return selectedValues.length == 0 ? `Select ${label}` : selectedValues.length == 1 ? selectedValues[0] : "{multiple}";
+    return selectedValues.length == 0 ? `Select ${label}` : selectedValues.length == 1 ? selectedValues[0] : "[multiple]";
   }, [selectedValues, label]);
 
   return (

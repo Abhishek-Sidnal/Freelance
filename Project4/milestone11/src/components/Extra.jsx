@@ -37,13 +37,12 @@ const Dtable = () => {
     const generateRows = useMemo(() => {
         const rows = [];
         const summaryData = {};
-
-        // Check if multiple countries AND ways selected
+    
         const isMultipleCountries = appliedFilters.countries.length > 1;
         const isMultipleWays = appliedFilters.ways.length > 1;
-
-        // Initialize summary data structure
-        if (isMultipleCountries && isMultipleWays) {
+    
+        // Initialize summary data structure if necessary for multiple countries and ways
+        if ((isMultipleCountries && !isMultipleWays) || (!isMultipleCountries && isMultipleWays) || (isMultipleCountries && isMultipleWays)) {
             filteredDates.forEach((date) => {
                 summaryData[date.id] = {};
                 bagStatuses.forEach((status) => {
@@ -51,7 +50,8 @@ const Dtable = () => {
                 });
             });
         }
-
+    
+        // Generating rows for each combination of country and way
         appliedFilters.countries.forEach((country) => {
             appliedFilters.ways.forEach((way) => {
                 rows.push(
@@ -78,14 +78,13 @@ const Dtable = () => {
                                                 : status === "Open Bags"
                                                     ? "lightGreenHeader"
                                                     : ""
-                                                }`}
-                                            >{status}</td>
+                                                }`}>{status}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </td>
-
+    
                         {filteredDates.map((date) => (
                             <td colSpan="3" key={`${country}-${way}-${date.id}`} className="summary-date-cell">
                                 <table border="1" className="inner-table">
@@ -94,17 +93,16 @@ const Dtable = () => {
                                             const GBI = Math.round(Math.random() * 10000);
                                             const AOS = Math.round(Math.random() * 10000);
                                             const FSI = Math.round(Math.random() * 10000);
-
                                             const AOS_GBI = toggleColumn ? AOS - GBI : null;
                                             const AOS_FSI = toggleColumn ? AOS - FSI : null;
-
+    
                                             // Accumulate for summary
-                                            if (isMultipleCountries && isMultipleWays) {
+                                            if ((isMultipleCountries && !isMultipleWays) || (!isMultipleCountries && isMultipleWays) || (isMultipleCountries && isMultipleWays)) {
                                                 summaryData[date.id][status].GBI += GBI;
                                                 summaryData[date.id][status].AOS += AOS;
                                                 summaryData[date.id][status].FSI += FSI;
                                             }
-
+    
                                             return (
                                                 <tr key={`${country}-${way}-${status}-data-${date.id}`}
                                                     className={`bodyHeader ${status === "Total Bags Created" ||
@@ -114,8 +112,7 @@ const Dtable = () => {
                                                         : status === "Open Bags"
                                                             ? "lightGreenHeader"
                                                             : ""
-                                                        }`}
-                                                >
+                                                    }`}>
                                                     <td className="gbi-cell">{GBI}</td>
                                                     {toggleColumn && <td className="aos-gbi-cell">{AOS_GBI}</td>}
                                                     <td className="aos-cell">{AOS}</td>
@@ -132,9 +129,9 @@ const Dtable = () => {
                 );
             });
         });
-
-        // Insert summary row at the top
-        if (isMultipleCountries && isMultipleWays) {
+    
+        // Summary Row: Add the summary row at the top if multiple countries and/or ways are selected
+        if ((isMultipleCountries && !isMultipleWays) || (!isMultipleCountries && isMultipleWays) || (isMultipleCountries && isMultipleWays)) {
             const summaryRow = (
                 <tr key="summary-row" className="summary-row">
                     <td colSpan="3" className="summary-cell">
@@ -144,12 +141,12 @@ const Dtable = () => {
                                     <tr key={`summary-${status}`} className="summary-status-row">
                                         {index === 0 && (
                                             <td rowSpan={bagStatuses.length} className="country-cell">
-                                                Multiple
+                                                [Multiple]
                                             </td>
                                         )}
                                         {index === 0 && (
                                             <td rowSpan={bagStatuses.length} className="summary-way-cell">
-                                                Multiple
+                                                [Multiple]
                                             </td>
                                         )}
                                         <td className={`bodyHeader ${status === "Total Bags Created" ||
@@ -159,8 +156,7 @@ const Dtable = () => {
                                             : status === "Open Bags"
                                                 ? "lightGreenHeader"
                                                 : ""
-                                            }`}
-                                        >{status}</td>
+                                        }`}>{status}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -174,7 +170,7 @@ const Dtable = () => {
                                         const { GBI, AOS, FSI } = summaryData[date.id][status];
                                         const AOS_GBI = toggleColumn ? AOS - GBI : null;
                                         const AOS_FSI = toggleColumn ? AOS - FSI : null;
-
+    
                                         return (
                                             <tr key={`summary-${status}-${date.id}`}
                                                 className={`bodyHeader ${status === "Total Bags Created" ||
@@ -184,8 +180,7 @@ const Dtable = () => {
                                                     : status === "Open Bags"
                                                         ? "lightGreenHeader"
                                                         : ""
-                                                    }`}
-                                            >
+                                                }`}>
                                                 <td className="summary-gbi-cell">{GBI}</td>
                                                 {toggleColumn && <td className="summary-aos-gbi-cell">{AOS_GBI}</td>}
                                                 <td className="summary-aos-cell">{AOS}</td>
@@ -200,13 +195,14 @@ const Dtable = () => {
                     ))}
                 </tr>
             );
-
-            // Add it at the start of rows
+    
+            // Insert the summary row at the start of rows
             rows.unshift(summaryRow);
         }
-
+    
         return rows;
     }, [appliedFilters, filteredDates, toggleColumn]);
+    
 
 
     const renderSelectionWithTooltip = (selectedItems, type) => {
@@ -225,7 +221,7 @@ const Dtable = () => {
             <div
                 className="tooltip"
             >
-                {`{Multiple}`}
+                {`[Multiple]`}
                 <ul className="bottom" >
                     {selectedItems.map((item, index) => (
                         <li key={index}>{item}</li>
@@ -524,7 +520,7 @@ const Dtable = () => {
                                                     {`Till Day ${8 - index} (EOD)`}
                                                 </th>
                                             </tr>
-                                            <tr className="date-row">
+                                            <tr className="date-row-2">
                                                 <th colSpan={toggleColumn ? "5" : "3"}>
                                                     {selectedDate} - {date.label}
                                                 </th>

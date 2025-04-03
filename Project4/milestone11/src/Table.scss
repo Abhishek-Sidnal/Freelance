@@ -99,7 +99,7 @@
             .summary-cell,
             .group-cell,
             .table-header {
-                position: -webkit-sticky;
+                position: --webkit-sticky;
                 position: sticky;
                 left: 0;
                 z-index: 2;
@@ -114,6 +114,17 @@
                     width: 33%;
                 }
             }
+
+            .summary-cell {
+                background-color: #fcfaf3;
+            }
+
+            .date-row {
+                th {
+                    font-weight: bold;
+                }
+
+            }
         }
 
         .header-row {
@@ -127,23 +138,18 @@
         .main-table-header {
             width: 100%;
 
-            .header-row {
-                width: 100%;
-                // position: relative;
-                font-weight: 500;
-            }
-
-
-
-
             .date-header {
-                background-color: #f9f9f9;
                 text-align: center;
                 width: 450px;
                 max-width: 450px;
                 min-width: 400px;
                 padding: 3px;
+            }
 
+             .column-header {
+                th {
+                    font-weight: bold;
+                }
             }
         }
 
