@@ -1,6 +1,4 @@
-// import Dtable from './components/DTable'
-
-import Dtable from "./components/Extra"
+import Dtable from "./components/Dtable"
 
 function App() {
 
