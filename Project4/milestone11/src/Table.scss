@@ -281,3 +281,27 @@
         }
     }
 }
+
+
+
+.Sticky-container {
+    width: 100%;
+    overflow: auto;
+    display: flex;
+    position: relative;
+
+    
+
+    .stick {
+        min-width: 300px;
+        background-color: green;
+        border: 1px solid black;
+        height: 300px;
+    }
+
+    .first {
+        position: sticky;
+        background-color: yellow;
+        left: 0;
+    }
+}

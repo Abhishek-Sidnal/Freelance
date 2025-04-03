@@ -7,7 +7,7 @@ import { PiSwapLight } from "react-icons/pi";
 import { BiExport } from "react-icons/bi";
 import { MdLocalPrintshop } from "react-icons/md";
 import { LuTriangle } from "react-icons/lu";
-
+import Stick from "./Stick"
 const Dtable = () => {
     const tableRef = useRef(null);
     const defaultDate = generateLast8Days()[0].id;
@@ -434,6 +434,10 @@ const Dtable = () => {
 
     return (
         <div className="container">
+
+
+<Stick/>
+
             {/* Filter  */}
             <div className="filter-header">
                 <div className="filter">
