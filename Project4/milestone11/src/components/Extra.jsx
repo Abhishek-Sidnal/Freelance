@@ -490,7 +490,7 @@ const Dtable = () => {
                     <thead className="main-table-header">
                         <tr className="header-row">
                             <th colSpan="3" className="table-header">
-                                <table border="1" className="inner-table sticky ">
+                                <table border="1" className="inner-table">
                                     <thead>
                                         <tr className="column-header">
                                             <th>Country</th>
