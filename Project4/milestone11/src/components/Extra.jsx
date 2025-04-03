@@ -458,7 +458,7 @@ const Dtable = () => {
 
                 <div className="filter">
                     <label htmlFor="">As of Date</label>
-                    <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
+                    <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="select">
                         {dates.map((date) => (
                             <option key={date.id} value={date.id}>
                                 {date.label}

@@ -19,13 +19,10 @@
     background-color: #f4f6f8;
     padding: 20px;
 
-
     .filter {
         display: flex;
         flex-direction: column;
         gap: 10px;
-
-
     }
 
     button {
@@ -177,7 +174,6 @@
 
         th {
             font-weight: 500;
-
         }
 
         td,
@@ -222,10 +218,6 @@
     display: inline-block;
     position: relative;
     text-align: left;
-
-    h3 {
-        margin: 12px 0;
-    }
 
     .bottom {
         width: 150px;
@@ -278,7 +270,7 @@
 
 
 
-select {
+.select {
     padding: 10px;
     border: 1px solid #ccc;
     width: 150px;
