@@ -464,6 +464,9 @@ const Dtable = () => {
                             border: '1px solid #ccc',
                             width: '150px',
                             backgroundColor: 'yellow',
+                            appearance: 'none',       // Remove default dropdown styling
+                            WebkitAppearance: 'none', // Safari-specific appearance reset
+                            MozAppearance: 'none',    // Firefox-specific appearance reset
                         }}
                     >
                         {dates.map((date) => (
