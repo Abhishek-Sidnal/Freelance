@@ -3,6 +3,7 @@ import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import './MultiSelectDropdown.scss';
 
 const MultiSelectDropdown = ({ options = [], selectedValues = [], onChange, label }) => {
+
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -43,8 +44,23 @@ const MultiSelectDropdown = ({ options = [], selectedValues = [], onChange, labe
     if (selectedValues.includes('all')) {
       return 'All';
     }
-    return selectedValues.length == 0 ? `Select ${label}` : selectedValues.length == 1 ? selectedValues[0] : "[multiple]";
-  }, [selectedValues, label]);
+
+    if (selectedValues.length === 0) {
+      return `Select ${label}`;
+    }
+
+    // Map selectedValues (IDs) to their labels
+    const selectedOptionLabels = selectedValues
+      .map((id) => {
+        const option = options.find((opt) => opt.id === id);
+        return option ? option.label : null;
+      })
+      .filter((label) => label !== null); // Filter out any nulls if no matching option was found
+
+    return selectedOptionLabels.length === 1
+      ? selectedOptionLabels[0]
+      : "[multiple]";
+  }, [selectedValues, options, label]);
 
   return (
     <div className="multi-select-dropdown" ref={dropdownRef}>
@@ -67,6 +83,7 @@ const MultiSelectDropdown = ({ options = [], selectedValues = [], onChange, labe
               key={option.id}
               className={selectedValues.includes(option.id) ? 'selected' : ''}
               onClick={() => handleOptionClick(option.id)}
+              title={option.label}
             >
               {option.label}
             </li>

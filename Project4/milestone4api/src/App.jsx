@@ -1,11 +1,13 @@
-import Dtable from "./components/Dtable"
 import Footer from "./components/Footer"
-import "./App.scss"
+import FilterHeader from "./components/FilterC"
+import { FilterProvider } from "./components/context/FilterContext"
 function App() {
 
   return (
     <div className="main">
-      <Dtable />
+      <FilterProvider>
+        <FilterHeader />
+      </FilterProvider>
       <Footer />
     </div>
   )
