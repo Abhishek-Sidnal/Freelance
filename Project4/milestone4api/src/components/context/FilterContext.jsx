@@ -7,7 +7,7 @@ const FilterContext = createContext();
 export const FilterProvider = ({ children }) => {
     const [selectedCountries, setSelectedCountries] = useState(["all"]);
     const [selectedWaysToBuy, setSelectedWaysToBuy] = useState(["all"]);
-    const [selectedDate, setSelectedDate] = useState(""); 
+    const [selectedDate, setSelectedDate] = useState("");
     const [countryFilter, setCountryFilter] = useState([]);
     const [wbFilter, setWBFilter] = useState([]);
     const [dates, setDates] = useState([]);
@@ -19,7 +19,7 @@ export const FilterProvider = ({ children }) => {
     useEffect(() => {
         const fetchFilters = async () => {
             try {
-                const response = await axios.get(apiFilter);
+                const response = await axios.get("/Reports_Geo_Dropdown");
                 setFilters(response.data.result);
             } catch (error) {
                 console.log('Failed to load filters');
@@ -38,7 +38,7 @@ export const FilterProvider = ({ children }) => {
         setWBFilter(uniqueResult.waysToBuy);
         let tempDate = uniqueResult.dates.map((date => date.replaceAll("-", "/")));
 
-        setDates(tempDate); 
+        setDates(tempDate);
         setSelectedDate(tempDate[tempDate.length - 1]);
         setDisplayedFilters({
             countries: selectedCountries,
@@ -60,7 +60,7 @@ export const FilterProvider = ({ children }) => {
             date: selectedDate,
         });
     };
-    
+
 
     return (
         <FilterContext.Provider value={{

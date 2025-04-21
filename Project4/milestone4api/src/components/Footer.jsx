@@ -17,7 +17,7 @@ const useFetchTimestamps = (apiUrl) => {
         try {
             setLoading(true);
             setError(null); // Reset previous errors
-            const response = await axios.get(apiUrl);
+            const response = await axios.get("/Reports_Refresh_Timestamp");
             const result = response.data.result[0];
             if (result) {
                 setTimestamps({
@@ -50,7 +50,7 @@ const Footer = () => {
     return (
         <div className='footer'>
             {loading ? (
-               <Loader/>
+                <Loader />
             ) : error ? (
                 <div>
                     <p className='error-message '>{error}</p>

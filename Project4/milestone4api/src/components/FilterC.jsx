@@ -43,7 +43,7 @@ const FilterHeader = () => {
             console.log(requestData);
 
             try {
-                const response = await axios.post(apiUrl, requestData);
+                const response = await axios.post("/Reports_Row_Level_Data", requestData);
                 const result = response.data.result;
 
                 setReuslt(result);
