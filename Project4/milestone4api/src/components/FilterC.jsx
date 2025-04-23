@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MultiSelectDropdown from './MultiSelectDropdown';
 import { useFilters } from './context/FilterContext';
-import { bagData, getBagStatusSumsByDay, groupDataByCountryAndWaysToBuy } from '../data';
+import { bagData, getBagStatusSumsByDay, groupDataByCountryAndWaysToBuy } from './data';
 import axios from 'axios';
 import { PiSwapLight } from 'react-icons/pi';
 import { BiExport } from 'react-icons/bi';
@@ -43,7 +43,7 @@ const FilterHeader = () => {
             console.log(requestData);
 
             try {
-                const response = await axios.post("/Reports_Row_Level_Data", requestData);
+                const response = await axios.post("/api-data", requestData);
                 const result = response.data.result;
 
                 setReuslt(result);

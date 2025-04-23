@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { getUniqueCombinations } from '../../data';
+import { getUniqueCombinations } from '../data';
 
 const FilterContext = createContext();
 
@@ -19,7 +19,7 @@ export const FilterProvider = ({ children }) => {
     useEffect(() => {
         const fetchFilters = async () => {
             try {
-                const response = await axios.get("/Reports_Geo_Dropdown");
+                const response = await axios.get("/api-inti");
                 setFilters(response.data.result);
             } catch (error) {
                 console.log('Failed to load filters');

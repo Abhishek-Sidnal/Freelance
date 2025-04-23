@@ -1,15 +1,9 @@
-import Footer from "./components/Footer"
-import FilterHeader from "./components/FilterC"
-import { FilterProvider } from "./components/context/FilterContext"
+import Report from "./components/Report"
+
 function App() {
 
   return (
-    <div className="main">
-      <FilterProvider>
-        <FilterHeader />
-      </FilterProvider>
-      <Footer />
-    </div>
+    <Report />
   )
 }
 

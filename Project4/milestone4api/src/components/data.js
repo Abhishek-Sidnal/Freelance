@@ -101,7 +101,7 @@ export function getBagStatusSumsByDay(data) {
 
     data.forEach(entry => {
         entry.Day_Desc.forEach(dayObj => {
-            const dayLabel = Object.keys(dayObj)[0]; // e.g., "Till Day 1 (EOD)"
+            const dayLabel = Object.keys(dayObj)[0]; 
             const statuses = dayObj[dayLabel];
 
             if (!dayTotals[dayLabel]) {
